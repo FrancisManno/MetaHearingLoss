@@ -1,0 +1,622 @@
+---
+title: "Hearing loss meta-analysis"
+author: "Raúl Rodríguez-Cruces & Francis Manno"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libs, echo=FALSE, message=FALSE, warnings=FALSE}
+# Tables and Rmarkdown output
+library(pander)
+library(knitr)
+library(kableExtra)
+library(lubridate)
+# General libraries
+library(viridis)     # Colormaps
+library(scales)      # Alpha function for color transparency
+library(corrplot)    # Correlation plots
+library(extrafont)   # Include extra fonts in plots
+library(ggplot2)     # Ggplots functions for R
+library(ggExtra)     # Marginal histogram/density/violin/boxplot in ggplots
+library(gridExtra)   # Array for ggplots, equivalent of par(mfrow) 
+library(esc)         # Effect size library, for Hedges'g calculation
+# Libraries for meta-analysis
+library(meta)
+library(metafor)
+library(rmeta)
+library(forestplot)  # Forestplot for meta-regression visualization
+```
+
+# Methods  
+### Eligibility Criteria  
+We included peer-review publications in English, involving patients with bilateral congenital and mixed hearing loss and controls with structural Magnetic Resonance Imaging.  
+Study design was using cross-sectional including control groups, ivestigating the structural relation between MRI changes and the Hearing loss. ROI were selected among the included studies Analysis method, the most common outcome measures were **volume, FA, VBM and thickness.**
+A total of 41 studies were included, with a total of 851 patients and 964 patients.  
+Notes:  
+\begin{enumerate}
+\item I excluded Xia et al. Chin J Rad, 2008 because I don't understand chinese and it appears to be the same data as Xia et al. Chin J Med Img Tech, 2008  
+\item  Kim et al. Hear Res 2014 used two groups prelingual deaf and post lingual deaf, I used the average for the main table.  
+\item  Xia et al. Chin J Med Img Tech, 2008 had a total of 40 patients, two groups 9-12 years and 19-22 years, no controls  
+\item  Zheng et al. Sci Rep, 2017 this variables change; Con rangeLow	Con rangeHigh. Why? I didn't find them on the orignal paper  
+\end{enumerate}  
+
+Effect size direction was directly include in the Cohen's D value by mutipliying by -1 if the effect was decrease and by 1 if it was none of increased. Forests plots were calculated the meta-regression for left and right. 
+We measure a global meta regression for white and gray mater by side (Left and rigth). 
+We include those ROI with most frequency of apearing. 
+
+Effects were summarized across studies using the generic inverse-variance weighting method with DerSimonian and Laird random effects, meaning studies were weighted by $1/SE²$ (where SE is the standard error)
+
+$$Hedges'G=\frac{X_1 - X_2}{\sqrt{\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}}}$$
+
+
+
+### Assumptions:  
+\begin{enumerate}  
+\item We assume that the calculation of the cohen's D is correct.  
+\item We assume that the direction of the effect is correct.  
+\item Variance was estimated using the cohen's D and sample size of each study. Our estimated variance was used for all meta-regressions, therefore we could have and additional in the between studies variance and eterogeneity calculations. We should have done the mean and standart deviation from each study. Variance was estimated using the following formula:  
+$$Variance=\frac{n1+n2}{n1\times n2}+\frac{Hedges'G^2}{2\times(n1+n2-2)}$$  
+\end{enumerate}  
+  
+### Estimate of heterogeneity per model  
+“We estimated heterogeneity in results using the $\tau$ statistic, which represents the standard deviation” such as overall.hetstat or a heterogeneity test $x2$ and $I2$ index  
+We performed a multi-level meta-analytic model, over our multiple effect size estimates nested withing variables: Big brain area, ROI, etc. We expect that the underlying true effects are more similar for the same level of the grouping variable than thrue effects arising from different levels  
+"We can account for the correlation in the true effects by adding a random effect to the model at the level corresponding to the grouping variable. "
+The dataset contains the result from N studies, each comparing different measurements between patients and controls. The diference of between groups was quantified in terms of Cohen's D.
+
+  
+### Notes from Francis  
+Remember I created the effect size because are the variables and metric were different. This take mean and SD out of the equation. But you can represent the mean and SD as another variable if you want to calculate what effect sizes would create a cohen’s d and cc r for specific variables. That way we would standardize it across our different means and SD.
+2.1.16. CC which is the correlation coefficient  
+2.3. Calculate Hedges’ g which takes into consideration sample size  
+> I used Cohen's D instead of these last two because ai calculated the variace from the cohen's D, but I can do it for the Hedges'G as well
+
+\scriptsize
+
+```{r datos, echo=FALSE, size = 'scriptsize'}
+# set working directory
+setwd("~/git_here/MetaHearingLoss/")
+# Upload  functions and libraries
+source("meta_functions.R")
+
+# table size \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, and \Huge
+# Upload database
+meta <- read.csv("~/git_here/MetaHearingLoss/meta_sideDeaf.csv")
+
+# Source of studies, "author + year"
+meta$Source <- paste0(meta$year,", ",meta$study)
+meta$yrAu <- paste0(meta$year,"-",sapply(strsplit(as.character(meta$study)," "), `[`, 1))
+
+# Total N
+meta$N.total <- meta$Number.Hearing.loss + meta$Number.Control
+
+# Cohen's D with direction
+meta$cohenD <- meta$Cohen.s.d*ifelse(meta$effect=="decrease",-1,1)
+
+# hedges_g
+meta$hedgesG <- hedges_g(d = meta$cohenD, totaln = meta$N.total)
+
+# Cohen's D Variance
+meta$varDe <- varDe(meta$Number.Hearing.loss, meta$Number.Control, meta$cohenD)
+
+# Cohen's D Variance
+meta$varG <- varDe(meta$Number.Hearing.loss, meta$Number.Control, meta$hedgesG)
+
+# odds ratio
+#meta$or <- odds_ratio(d = meta$Cohen.s.d)
+
+# Unique studies
+studies <- meta[,c("study","year","Etiology","Side.deaf","Severeity","Number.Hearing.loss",
+                   "HL.Male","HL.Female","HL.age","HL.Age.sd","SIGN","Number.Control","Con.Male",
+                   "Con.Female","Con.Age","Con.Age.sd","MRI.Tesla", "Source","Avg.dB.HL.mean")]
+studies <- studies[!duplicated(studies),]
+
+# I excluded Xia et al. Chin J Rad, 2008 because I don't understand chinese and it appears to be the same data as Xia et al. Chin J Med Img Tech, 2008
+    studies <- studies[!studies$Source=="2008, Xia et al. Chin J Rad",]
+# Kim et al. Hear Res 2014 used two groups prelingual deaf and post lingual deaf, used the average for the main table.
+    indx <- which(studies$Source=="2014, Kim et al. Hear Res")
+# Number.Hearing.loss - HL.Male - HL.Female
+    studies <- rbind(studies,c(studies[indx[1],1:5],colSums(studies[indx,6:8]), apply(studies[indx,9:10],2,mean), studies[indx[1],11:19]))
+    studies <- studies[-indx,]
+# Xia et al. Chin J Med Img Tech, 2008 had 40 patients in total two groups 9-12 years and 19-22 years
+    indx <- which(studies$Source=="2008, Xia et al. Chin J Med Img Tech")
+    studies <- rbind(studies,c(studies[indx[1],1:5],colSums(studies[indx,6:8]),studies[indx[1],9:19]))
+    studies <- studies[-indx,]
+# Zheng et al. Sci Rep, 2017 this variables change, why? Con rangeLow	Con rangeHigh, i didn't find them on the orignal paper
+
+# Percentage of females
+studies$Female.Patients <- studies$HL.Female*100/studies$Number.Hearing.loss
+studies$Female.Control <- studies$Con.Female*100/studies$Number.Control
+
+# Order by year and author
+studies <- studies[order(studies$Source),]
+
+# --------------------------------------------------- #
+# TABLE 1. INCLUDED STUDIES TOTAL SUBJECTS
+# Reorder columns for table
+include.studies <- studies[,c("Source","Etiology","Severeity","Number.Hearing.loss","Female.Patients","HL.age","Number.Control","Female.Control","Con.Age", "MRI.Tesla") ]
+colnames(include.studies) <- c("Source","Etiology","Severity","No.Patients","% Female Patients","Age.Patients","No.Control","% Female Control","Age.Control", "MRI Tesla") 
+
+# Print table
+Total <- matrix(c(sum(include.studies$No.Patients),sum(na.omit(include.studies$No.Control)),
+                  mean(include.studies$No.Patients),mean(na.omit(include.studies$No.Control)),
+                  sd(include.studies$No.Patients),sd(na.omit(include.studies$No.Control)),
+                  mean(na.omit(include.studies$Age.Patients)),mean(na.omit(include.studies$Age.Control)),
+                  sd(na.omit(include.studies$Age.Patients)),sd(na.omit(include.studies$Age.Control)), 
+                  mean(na.omit(include.studies$`% Female Patients`)),mean(na.omit(include.studies$`% Female Control`)),
+                  sd(na.omit(include.studies$`% Female Patients`)),sd(na.omit(include.studies$`% Female Control`))
+                  ), nrow = 7,ncol = 2,byrow = TRUE)
+rownames(Total) <- c("Total number of patients","Number mean","Number sd", "Age mean", "Age SD", "%Female mean", "%Female sd")
+colnames(Total) <- c("Hearing Loss", "Healthy")
+pander(Total,caption = "Total included studies: 41",split.table = Inf, graph.fontsize=3)
+
+
+# --------------------------------------------------- #
+# TABLE 2. ALL INCLUDED STUDIES 
+# Including Techniques and measurements per unique study
+include.studies$all.techniques <- include.studies$all.measures <- c()
+for (i in include.studies$Source) { 
+  tech <- sort(unique(as.vector(meta$Technique[meta$Source==i])))
+  measure <- sort(unique(as.vector(meta$measure[meta$Source==i])))
+  include.studies$all.techniques[include.studies$Source==i] <- paste(tech, collapse = ", ")
+  include.studies$all.measures[include.studies$Source==i] <- paste(measure, collapse = ", ")
+  }
+# Rownames
+rownames(include.studies) <- as.character(1:41)
+```
+
+# Table of included studies  
+  
+\footnotesize
+
+```{r lista, echo=FALSE, size = 'scriptsize'}
+
+# Table 2.1
+#panderOptions('table.alignment.default', c('left',rep('center',8)))
+#pander(include.studies[,1:9],caption = "Included studies",split.table = Inf, graph.fontsize=3)
+
+# TABLE: Studies with incomplete information
+panderOptions('table.alignment.default', 'left')
+pander(include.studies[!complete.cases(include.studies),c(1,10:12)],caption = "Studies with incomplete information (NA)",split.table = Inf, graph.fontsize=6)
+
+
+# Table 2.2
+pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "Included studies",split.table = Inf, graph.fontsize=6)
+
+# kable(include.studies[,1:9], format = "latex", caption = "Table of include studies", booktabs = T, linesep = "") %>%
+#   kable_styling(full_width = TRUE,font_size = 7 ) # %>%
+#   # add_header_above(c("-" = 4, " x 10-4" = 3, " x 10-3" = 3)) %>%
+#   # add_header_above(c("Tractos", "Fraccion Anisotropica" = 3, "Difusividad Radial" = 3, "Difusividad Axial"=3), bold = T) %>%
+#   # add_footnote("Significancia p<0.05", notation = "symbol")
+```  
+
+
+\normalsize  
+  
+
+# Overal view of the studies  
+
+```{r lollip, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3}
+source("meta_functions.R")
+
+# Lollipop graphs
+grid.arrange(
+lollipop(table(meta$measure),"MRI Measures",c(0,300)),
+lollipop(table(meta$Big.area)[order(table(meta$Big.area),decreasing = TRUE)][1:12],"Main Brain Areas\n frecuency>5",c(0,300))
+, ncol=2, nrow = 1)
+lollipop(table(meta$ROI)[order(table(meta$ROI),decreasing = TRUE)][1:35],"Region of interest: frecuency>5",c(0,80))
+par(mfrow=c(1,2))
+# Bar graph of frecuency
+bargraph(table(meta$Side)[order(table(meta$Side),decreasing = FALSE)][2:5],"Side of the Lesion")
+bargraph(table(meta$matter)[order(table(meta$matter),decreasing = FALSE)], "Area of Analysis")
+```
+  
+  
+# Relation of Average dB and Age  
+```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=3,fig.width=4}
+gg=ggplot(studies, mapping =aes(x=HL.age, y=Avg.dB.HL.mean)) +
+  geom_point(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), color="gray30", alpha = 50 / 100, position = "jitter") +
+  geom_smooth(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), method = lm) +
+  ggtitle("Average dB HL mean vs Age")
+# with marginal histogram
+ggMarginal(gg, type="histogram")
+
+```
+
+
+# Frequency and contingensy tables
+a. Most of the studies that measured Gray matter focus on cortical changes (volume, thicknes and VBM).  
+b. White matter studies are more heterogeneous in their measurements.  
+c. Diffusion tensor (DT) derived mesurements are the most frequent in white matter, followed by volume.  
+  c.1 It is harder to interpret a meta-analysis of multiple white matter measurements because their effect varies widely and in different directions. The measurements derived from DT have the most differences.  
+    
+WE conduct our meta-analysis using the **TWO** most frequent measurements for gray and white matter. We use *volume* for GM and *fractional anysotropy* for WM.   
+  
+Further meta regressions can be found in the supplementary material.  
+**Gray Matter**  
+- thickness  
+- VBM  
+
+**White Matter integrity**  
+- mean diffusivity MD  
+- radial diffusivity RD  
+- axial diffusivity AD  
+- mean kurtosis  
+
+**White Matter volume**  
+- thickness (I am unsure how they did this)  
+- VBM  
+- volume
+
+\footnotesize
+
+# Frequency tables: measures of WM & GM  
+```{r tab1,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3}
+# Table: Matter vs Side 
+pander(table(meta$matter,meta$Side)[c(1,4),],caption = "Matter vs Side")
+# Table: Matter vs Measure 
+pander(table(meta$matter,meta$measure)[c(1,4),],caption = "Matter vs measure")
+# Bar graph of frecuencies
+tablas <- table(meta$matter,meta$measure)
+# 1 x 2
+grid.arrange(
+# GRAY MATTER MEASUREMENTS
+lollipop(tablas[1,order(tablas[1,],decreasing = T)[1:5]],"Gray Matter measures",c(0,150)),
+# WHITE MATTER MEASUREMENTS
+lollipop(tablas[4,order(tablas[4,],decreasing = T)[1:10]],"White Matter measures",c(0,150)),
+ncol=2, nrow = 1)
+```
+
+\normalsize
+
+# Contingensy tables: Main areas and sub-areas  
+Sub-analys were carried out in those areas that had measures from at least five studies. Those areas were selected from the contingensy tables.  
+
+\footnotesize
+
+```{r tab2,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.height=3}
+# Contingensy table measure vs Big Area
+freq.table2 <- table(meta$Big.area,meta$measure)
+Ind <- order(apply(as.matrix(freq.table2),1,sum),decreasing = TRUE)
+# Slices the first nine more frequent
+pander(freq.table2[Ind[1:9],],caption = "Table: Measure vs Big area")
+
+# Contingensy table measure vs ROI
+freq.table <- table(meta$ROI,meta$measure)
+Indx <- order(apply(as.matrix(freq.table),1,sum),decreasing = TRUE)
+pander(freq.table[Indx[1:16],],caption = "Table: Measure vs ROI")
+
+grid.arrange(
+# Frequency table: Gray matter volume Big areas: >5 studies
+lollipop(table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])>4],"GM-volume & Big areas\n >5 studies",c(0,60)),
+# Frequency table: White matter FA Big areas: >5 studies
+lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])>4],"WM-FA & Big areas\n >5 studies",c(0,60)),
+ncol=2, nrow = 1)
+
+```
+
+\normalsize
+
+# Most common ROI for WM-FA and GM-volume
+```{r roi, echo=FALSE, warning=FALSE, message=FALSE}
+par(mfrow=c(1,2))
+# Lollipop graphs
+bargraph(table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])[table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])>2],"White matter FA ROIs: >5 studies")
+
+# Bar graph of frecuency
+bargraph(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])>4],"Gray Matter volume ROIs: >5 studies")
+```
+
+# Figure 1 - Methods  
+```{r fig1a, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8,fig.height=2}
+# FRECUENCY BY MRI MEASURE
+tablas <- table(meta$matter,meta$measure)
+grid.arrange(
+# GRAY MATTER MEASUREMENTS 400w 175h  greater than 0= 1:14
+lollipop(tablas[1,order(tablas[1,],decreasing = T)[1:5]],"GM measures",c(0,150)),
+# WHITE MATTER MEASUREMENTS 400w 300h
+lollipop(tablas[4,order(tablas[4,],decreasing = T)[1:10]],"WM measures",c(0,150)),
+nrow=1, ncol = 2)
+
+grid.arrange(
+# Frequency table: Gray matter volume Big areas: > 5 studies
+lollipop(table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])>4],
+         "GM-volume & Big areas",c(0,60)),
+# Frequency table: White matter FA Big areas: >5 studies
+lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])>4],
+         "WM-FA & Big areas",c(0,60)),
+# Frequency table: White matter FA Big areas: >5 studies
+lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="volume"])>4],
+         "WM-volume & Big areas",c(0,60)),
+nrow=1, ncol = 3)
+
+# Insersect data by GM+WM and volume+FA
+meta.GWm <- meta[
+  intersect(which(!is.na(factor(meta$measure, levels=c("volume","FA")))),
+            which(!is.na(factor(meta$matter, levels=c("WM","GM")))) ),]
+meta.GWm$matter <- droplevels(meta.GWm$matter)
+meta.GWm$measure <- droplevels(meta.GWm$measure) 
+meta.GWm$class <- factor(paste0(meta.GWm$matter,"-",meta.GWm$measure), levels = c("WM-volume","WM-FA","GM-volume"))
+
+# get the names of the most common ROIs
+#table of common measures
+tab.com <- table(meta$matter,meta$ROI)[c(1,4),order(table(meta$matter,meta$ROI)[1,],decreasing = T)][,c(1,2,4,19,25,22,13,17,16)[1:5]]
+
+noms <- colnames(table(meta.GWm$class,meta.GWm$ROI)[,order(colSums(table(meta.GWm$class,meta.GWm$ROI)),decreasing = T)][,1:20])
+noms <- colnames(tab.com)
+# Slice data by our variables of interest
+meta.GWm <- meta.GWm[which(!is.na(factor(meta.GWm$ROI, levels=noms))),]
+# Reorder levels
+meta.GWm$ROI <- droplevels(meta.GWm$ROI)
+meta.GWm$ROI <- factor(meta.GWm$ROI,levels = rev(noms))
+
+# PLot the stacked plto  600 x 250 px
+ggplot(meta.GWm, aes(ROI)) + 
+  geom_bar(aes(fill=class), width = 0.85, alpha=0.8, colour="white") +
+  coord_flip() +
+  theme(legend.position = "top") +
+  scale_fill_manual(values=rev(c("#008000","#000080","royalblue3")))
+
+```
+
+
+# Figure 3 - Meta-regressions of GM & WM by measure
+## Figure 3 - Gray Matter Volume: Random effects model no intercept covariated by Big area  
+```{r f3.GMvol-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
+# GRAY MATTER AND VOLUME sliced data
+meta.sliced <- meta[meta$measure=="volume" & meta$matter=="GM",]
+
+### fit random-effects model
+result.rd <- rma(yi=cohenD, vi=varDe, data = meta.sliced, slab = study, 
+                 mods=~factor(Big.area)-1, measure = "MD",method = "REML")
+# Forest plot
+sub.forest(meta.sliced,Title = "Gray Matter Volume")
+
+# Confidence intervals of the heterogeneity
+#print(result.rd)
+#pander(confint(result.rd))
+```
+  
+```{r f3.GMvol-plot,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
+# Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
+plot.meta(result.rd,Title = "Gray Matter Volume")
+```
+
+## Figure 3 - White Matter Volume: Random effects model no intercept covariated by Big area  
+```{r f3.WMvol-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
+# GRAY MATTER AND VOLUME sliced data
+meta.sliced <- meta[meta$measure=="volume" & meta$matter=="WM",]
+
+### fit random-effects model
+result.rd <- rma(yi=cohenD, vi=varDe, data = meta.sliced, slab = study, 
+                 mods=~factor(Big.area)-1, measure = "MD",method = "REML")
+# Forest plot
+sub.forest(meta.sliced,Title = "White Matter Volume")
+```
+  
+```{r f3.WMvol-plot,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
+# Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
+plot.meta(result.rd,Title = "White Matter Volume")
+```
+
+## Figure 3 - White Matter Fractional Anisotropy (FA): Random effects model no intercept covariated by Big area  
+```{r f3.WMfa-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=14}
+# GRAY MATTER AND VOLUME sliced data
+meta.sliced <- meta[meta$measure=="FA" & meta$matter=="WM",]
+
+### fit random-effects model
+result.rd <- rma(yi=cohenD, vi=varDe, data = meta.sliced, slab = study, 
+                 mods=~factor(Big.area)-1, measure = "MD",method = "REML")
+# Forest plot
+sub.forest(meta.sliced,Title = "White Matter FA")
+```
+  
+```{r f3.WMfa-plot,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
+# Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
+plot.meta(result.rd,Title = "White Matter FA")
+```
+  
+# Figure 3 - Supplementary material:  heterogeneity per model
+```{r f3.meta.plot, echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=6, fig.height=6}
+# Insersect data by GM+WM and volume+FA
+meta.GWm <- meta[
+  intersect(which(!is.na(factor(meta$measure, levels=c("volume","FA")))),
+            which(!is.na(factor(meta$matter, levels=c("WM","GM")))) ),]
+meta.GWm$matter <- droplevels(meta.GWm$matter)
+meta.GWm$measure <- droplevels(meta.GWm$measure) 
+meta.GWm$class <- factor(paste0(meta.GWm$matter,"-",meta.GWm$measure), levels = c("WM-volume","WM-FA","GM-volume"))
+
+# Funtion to slice data
+meta.slice <- function(Data, Side, Matter, Measure){
+  Data <- Data[Data$Side==Side & Data$matter==Matter & Data$measure==Measure,]
+  return(Data)
+}
+
+# Right-Left structures - GM volume
+pandoc.header("Heterogeney: GM volume Right", level = 2)
+plot.meta(rma(yi=hedgesG, vi=varDe, data = meta.slice(meta.GWm,"right","GM","volume"),slab = yrAu, measure = "MD",method = "REML"),"GM volume Right")
+cat("\n")
+pandoc.header("Heterogeney: GM volume Left", level = 2)
+plot.meta(rma(yi=hedgesG, vi=varDe, data = meta.slice(meta.GWm,"left","GM","volume"),slab = yrAu, measure = "MD",method = "REML"),"GM volume Left")
+cat("\n")
+# Right-Left structures - WM FA
+pandoc.header("Heterogeney: WM FA Right", level = 2)
+plot.meta(rma(yi=hedgesG, vi=varDe, data = meta.slice(meta.GWm,"right","WM","FA"),slab = yrAu, measure = "MD",method = "REML"),"WM FA Right")
+cat("\n")
+pandoc.header("Heterogeney: WM FA Left", level = 2)
+plot.meta(rma(yi=hedgesG, vi=varDe, data = meta.slice(meta.GWm,"left","WM","FA"),slab = yrAu, measure = "MD",method = "REML"),"WM FA Left")
+cat("\n")
+# Right-Left structures - WM volume
+pandoc.header("Heterogeney: WM volume Right", level = 2)
+plot.meta(rma(yi=hedgesG, vi=varDe, data = meta.slice(meta.GWm,"right","WM","volume"),slab = yrAu, measure = "MD",method = "REML"),"WM volume Right")
+cat("\n")
+pandoc.header("Heterogeney: WM volume Left", level = 2)
+plot.meta(rma(yi=hedgesG, vi=varDe, data = meta.slice(meta.GWm,"left","WM","volume"),slab = yrAu, measure = "MD",method = "REML"),"WM volume Left")
+cat("\n")
+
+```
+
+# Figure 4 - Meta-regressions of Gray Matter Volume & Brain Areas: Random effects model no intercept covariated by Side   
+```{r fig4,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=10, fig.height=6}
+### Sliced the featured data
+Big.area <- c("temporal lobe", "parietal", "frontal", "cerebellum", "occipital", "insular cortex")
+meta.sliced <- meta[meta$measure=="volume" & meta$matter=="GM",]
+meta.sliced <- meta.sliced[meta.sliced$Big.area %in% Big.area,]
+meta.sliced$Big.area <- droplevels(meta.sliced$Big.area)
+# Plot forest plot of each subset
+for ( i in Big.area) {sub.forest(meta.sliced[meta.sliced$Big.area==i,], paste0("Gray matter Volume - ",i))
+  result.rd <- rma(yi=cohenD, vi=varDe, data = meta.sliced[meta.sliced$Big.area==i,], slab = study, 
+                  measure = "MD",method = "REML")
+  plot.meta(result.rd,Title = paste0("Gray matter Volume - ",i))}
+```
+
+# Figure 5 - Meta-regressions of White Matter FA & Brain Areas: Random effects model no intercept covariated by Side   
+```{r fig5,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=10, fig.height=6}
+### Sliced the featured data
+Big.area <- c("temporal lobe", "brainstem","thalmus","parietal", "frontal", "corpus callosum")
+meta.sliced <- meta[meta$measure=="FA" & meta$matter=="WM",]
+meta.sliced <- meta.sliced[meta.sliced$Big.area %in% Big.area,]
+meta.sliced$Big.area <- droplevels(meta.sliced$Big.area)
+# Plot forest plot of each subset
+for ( i in Big.area) {sub.forest(meta.sliced[meta.sliced$Big.area==i,], paste0("White matter FA - ",i)) 
+    result.rd <- rma(yi=cohenD, vi=varDe, data = meta.sliced[meta.sliced$Big.area==i,], slab = study, 
+                  measure = "MD",method = "REML")
+  plot.meta(result.rd,Title = paste0("White matter FA - ",i))}
+```
+
+# Figure 6 - Meta-regressions of White Matter Volume & Brain Areas: Random effects model no intercept covariated by Side   
+```{r fig6,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=10, fig.height=6}
+### Sliced the featured data
+Big.area <- c("temporal lobe", "insular cortex", "frontal", "occipital", "occipital", "corpus callosum")
+meta.sliced <- meta[meta$measure=="volume" & meta$matter=="WM",]
+meta.sliced <- meta.sliced[meta.sliced$Big.area %in% Big.area,]
+meta.sliced$Big.area <- droplevels(meta.sliced$Big.area)
+# Plot forest plot of each subset
+for ( i in Big.area) {sub.forest(meta.sliced[meta.sliced$Big.area==i,], paste0("White matter Volume - ",i)) 
+      result.rd <- rma(yi=cohenD, vi=varDe, data = meta.sliced[meta.sliced$Big.area==i,], slab = study, 
+                  measure = "MD",method = "REML")
+  plot.meta(result.rd,Title = paste0("White matter Volume - ",i))}
+```
+
+# Supplementary material: Forest-plots of other Measures  
+```{r forest,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=10, fig.height=8}
+pandoc.header("Hesch gyrus FA  white matter", level = 2)
+sub.forest(meta[meta$measure=="FA" & meta$ROI=="HG",],"White matter FA and HG")
+cat("  
+  ")
+
+pandoc.header("STG Volume White matter", level = 2)
+sub.forest(meta[meta$measure=="FA" & meta$ROI=="STG" & meta$matter=="WM",],"White matter FA and STG")
+cat("  
+  ")
+
+pandoc.header("Measures of White matter Integrity", level = 1)
+for (i in c("RD","MD","Mean Kurtosis","AD")){
+    pandoc.header(paste("White matter:",i), level = 2)
+  try(sub.forest(meta[meta$measure==i & meta$matter=="WM",],paste("WM &",i)))
+cat("  
+  ")
+}
+pandoc.header("Other Measures of White Matter", level = 1)
+for (i in c("Thickness", "VBM")){
+    pandoc.header(paste("White matter:",i), level = 2)
+    sub.forest(meta[meta$measure==i & meta$matter=="WM",],paste("WM &",i))
+cat("  
+  ")
+}
+```  
+
+# Supplementary material: Gray and White matter relation with Age  
+```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.width=8,fig.height=10}
+GM.vol.R <- meta[meta$measure=="volume" & meta$matter=="GM" & meta$Side=="right",]
+GM.vol.L <- meta[meta$measure=="volume" & meta$matter=="GM" & meta$Side=="left",]
+WM.fa.R <- meta[meta$measure=="FA" & meta$matter=="WM" & meta$Side=="right",]
+WM.fa.L <- meta[meta$measure=="FA" & meta$matter=="WM" & meta$Side=="left",]
+WM.vol.R <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Side=="right",]
+WM.vol.L <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Side=="left",]
+
+grid.arrange(
+# GRAY MATTER LEFT
+ggplot(data = GM.vol.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
+  ggtitle("Left-GM volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),  
+
+# GRAY MATTER RIGHT
+ggplot(data = GM.vol.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
+  ggtitle("Right-GM volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# WHITE MATTER LEFT - FA
+ggplot(data = WM.fa.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
+  ggtitle("Left-WM FA vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# WHITE MATTER RIGTH - FA
+ggplot(data = WM.fa.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
+  ggtitle("Right-WM FA vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# WHITE MATTER LEFT - VOLUME
+ggplot(data = WM.vol.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
+  ggtitle("Left-WM Volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# WHITE MATTER RIGTH - VOLUME
+ggplot(data = WM.vol.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
+  ggtitle("Right-WM Volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+ncol=2, nrow = 3)
+```  
+
+
+  
+# Meta Plots  
+
+## The L’Abbé plot 
+In a L'Abbé plot (based on L'Abbé, Detsky, & O'Rourke, 1987), the arm-level outcomes for two experimental groups (e.g., treatment and control group) are plotted against each other. is treatment versus effect, since you have the cohen’s d this should be relatively simple.  
+> WE DON'T HAVE TWO EXPERIMENTAL GROUPS
+  
+## Baujat plot to identify studies contributing to heterogeneity  
+The plot shows the contribution of each study to the overall Q-test statistic for heterogeneity on the horizontal axis versus the influence of each study (defined as the standardized squared difference between the overall estimate based on a fixed-effects model with and without the ith study included in the model) on the vertical axis
+2.17. Funnel plot to illustrate publication bias  
+
+## Galbraith plot  
+Radial plot (radial) of variables and cohen’s d - Galbraith, Rex (1988). "Graphical display of estimates having differing standard errors". Technometrics. Technometrics, Vol. 30, No. 3. 30 (3): 271–281.  
+2.18.2. We want to see this type of error plot over time for our patient cohorts by age. we want this for each measure WM and GM versus age on the x-axis so we can see GM and WM over time! Do a monte carlo simulation to connect different age population and create the error.  
+For a fixed-effects model, the plot shows the inverse of the standard errors on the horizontal axis against the individual observed effect sizes or outcomes standardized by their corresponding standard errors on the vertical axis. On the right hand side of the plot, an arc is drawn corresponding to the individual observed effect sizes or outcomes. A line projected from (0,0) through a particular point within the plot onto this arc indicates the value of the individual observed effect size or outcome for that point.
+  
+  
+# Resources  
+We are following Preferred Reporting Items for Systematic Reviews and Meta-Analyses guidelines: Moher, D., Liberati, A., Tetzlaff, J., Altman, D. G., and Prisma Group. (2009). Preferred reporting items for systematic reviews and meta-analyses: the PRISMA statement. PLoS Med. 6:e1000097. doi: 10.1371/journal.pmed.1000097 AND https://www.bmj.com/content/339/bmj.b2535  
+  
+- https://stackoverflow.com/questions/14426637/how-to-do-bubble-plot  
+- https://www.researchgate.net/publication/296680807_Menstrual_hygiene_management_among_adolescent_girls_in_India_A_Systematic_review_and_meta-analysis/figures?lo=1  
+  
+### Good explanation of some of the plots:  
+- https://ora.ox.ac.uk/objects/uuid:ff78831d-6f82-4187-97cc-349058e9abde/download_file?file_format=pdf&safe_filename=Rahimi%2Bet%2Bal%252C%2BData%2Bvisualisation%2Bfor%2Bmeta-analysis.pdf&type_of_work=Journal+article  
+
+
+  
+  
