@@ -85,7 +85,7 @@ source("meta_functions.R")
 
 # table size \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, and \Huge
 # Upload database
-meta <- read.csv("~/git_here/MetaHearingLoss/meta_sideDeaf_full.csv")
+meta <- read.csv("meta_sideDeaf_full.csv")
 
 # Source of studies, "author + year"
 meta$Source <- paste0(meta$year,", ",meta$study)
