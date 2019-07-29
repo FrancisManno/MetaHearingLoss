@@ -85,7 +85,7 @@ source("meta_functions.R")
 
 # table size \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, and \Huge
 # Upload database
-meta <- read.csv("~/git_here/MetaHearingLoss/meta_sideDeaf.csv")
+meta <- read.csv("~/git_here/MetaHearingLoss/meta_sideDeaf_full.csv")
 
 # Source of studies, "author + year"
 meta$Source <- paste0(meta$year,", ",meta$study)
@@ -166,7 +166,7 @@ for (i in include.studies$Source) {
   include.studies$all.measures[include.studies$Source==i] <- paste(measure, collapse = ", ")
   }
 # Rownames
-rownames(include.studies) <- as.character(1:41)
+rownames(include.studies) <- as.character(1:dim(include.studies)[1])
 ```
 
 # Table of included studies  
@@ -262,12 +262,15 @@ pander(table(meta$matter,meta$Side)[c(1,4),],caption = "Matter vs Side")
 pander(table(meta$matter,meta$measure)[c(1,4),],caption = "Matter vs measure")
 # Bar graph of frecuencies
 tablas <- table(meta$matter,meta$measure)
+G <- which(rownames(tablas)=="GM")
+W <- which(rownames(tablas)=="WM")
+  
 # 1 x 2
 grid.arrange(
 # GRAY MATTER MEASUREMENTS
-lollipop(tablas[1,order(tablas[1,],decreasing = T)[1:5]],"Gray Matter measures",c(0,150)),
+lollipop(tablas[G,order(tablas[G,],decreasing = T)[1:5]],"Gray Matter measures",c(0,200)),
 # WHITE MATTER MEASUREMENTS
-lollipop(tablas[4,order(tablas[4,],decreasing = T)[1:10]],"White Matter measures",c(0,150)),
+lollipop(tablas[W,order(tablas[W,],decreasing = T)[1:10]],"White Matter measures",c(0,200)),
 ncol=2, nrow = 1)
 ```
 
@@ -340,11 +343,16 @@ meta.GWm <- meta[
             which(!is.na(factor(meta$matter, levels=c("WM","GM")))) ),]
 meta.GWm$matter <- droplevels(meta.GWm$matter)
 meta.GWm$measure <- droplevels(meta.GWm$measure) 
-meta.GWm$class <- factor(paste0(meta.GWm$matter,"-",meta.GWm$measure), levels = c("WM-volume","WM-FA","GM-volume"))
+meta.GWm$class <- factor(paste0(meta.GWm$matter,"-",meta.GWm$measure), levels = c("WM-volume","WM-FA","GM-volume","GM-FA"))
+# REMUVE GM-FA Gray matter FA
+meta.GWm <- meta.GWm[meta.GWm$class!="GM-FA",]
 
 # get the names of the most common ROIs
 #table of common measures
-tab.com <- table(meta$matter,meta$ROI)[c(1,4),order(table(meta$matter,meta$ROI)[1,],decreasing = T)][,c(1,2,4,19,25,22,13,17,16)[1:5]]
+tab.com <- table(meta.GWm$matter,meta.GWm$ROI)[,order(table(meta.GWm$matter,meta.GWm$ROI)[1,],decreasing = T)]
+tab.com <- tab.com[,order(colSums(tab.com),decreasing = T)]
+# Gets the ROIs with more than 6 studies
+tab.com <- tab.com[,which(colSums(tab.com)>=6)]
 
 noms <- colnames(table(meta.GWm$class,meta.GWm$ROI)[,order(colSums(table(meta.GWm$class,meta.GWm$ROI)),decreasing = T)][,1:20])
 noms <- colnames(tab.com)
@@ -353,6 +361,9 @@ meta.GWm <- meta.GWm[which(!is.na(factor(meta.GWm$ROI, levels=noms))),]
 # Reorder levels
 meta.GWm$ROI <- droplevels(meta.GWm$ROI)
 meta.GWm$ROI <- factor(meta.GWm$ROI,levels = rev(noms))
+
+# remove NA from class
+meta.GWm <- meta.GWm[!is.na(meta.GWm$class),]
 
 # PLot the stacked plto  600 x 250 px
 ggplot(meta.GWm, aes(ROI)) + 
