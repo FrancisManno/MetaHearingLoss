@@ -87,6 +87,9 @@ source("meta_functions.R")
 # Upload database
 meta <- read.csv("meta_sideDeaf_full.csv")
 
+# REMOVE mixed Etiology
+meta <- meta[meta$Etiology!="mixed",]
+
 # Source of studies, "author + year"
 meta$Source <- paste0(meta$year,", ",meta$study)
 meta$yrAu <- paste0(meta$year,"-",sapply(strsplit(as.character(meta$study)," "), `[`, 1))
@@ -201,8 +204,6 @@ pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "In
 # Overal view of the studies  
 
 ```{r lollip, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3}
-source("meta_functions.R")
-
 # Lollipop graphs
 grid.arrange(
 lollipop(table(meta$measure),"MRI Measures",c(0,300)),
@@ -219,8 +220,8 @@ bargraph(table(meta$matter)[order(table(meta$matter),decreasing = FALSE)], "Area
 # Relation of Average dB and Age  
 ```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=3,fig.width=4}
 gg=ggplot(studies, mapping =aes(x=HL.age, y=Avg.dB.HL.mean)) +
-  geom_point(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), color="gray30", alpha = 50 / 100, position = "jitter") +
-  geom_smooth(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), method = lm) +
+  geom_point(mapping = aes(x = HL.age, y = Avg.dB.HL.mean, color=Etiology), alpha = 50 / 100, position = "jitter") +
+  geom_smooth(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), method = lm, color="gray45") +
   ggtitle("Average dB HL mean vs Age")
 # with marginal histogram
 ggMarginal(gg, type="histogram")
@@ -320,9 +321,9 @@ bargraph(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$
 tablas <- table(meta$matter,meta$measure)
 grid.arrange(
 # GRAY MATTER MEASUREMENTS 400w 175h  greater than 0= 1:14
-lollipop(tablas[1,order(tablas[1,],decreasing = T)[1:5]],"GM measures",c(0,150)),
+lollipop(tablas[G,order(tablas[G,],decreasing = T)[1:5]],"GM measures",c(0,150)),
 # WHITE MATTER MEASUREMENTS 400w 300h
-lollipop(tablas[4,order(tablas[4,],decreasing = T)[1:10]],"WM measures",c(0,150)),
+lollipop(tablas[W,order(tablas[W,],decreasing = T)[1:10]],"WM measures",c(0,150)),
 nrow=1, ncol = 2)
 
 grid.arrange(
@@ -344,7 +345,7 @@ meta.GWm <- meta[
 meta.GWm$matter <- droplevels(meta.GWm$matter)
 meta.GWm$measure <- droplevels(meta.GWm$measure) 
 meta.GWm$class <- factor(paste0(meta.GWm$matter,"-",meta.GWm$measure), levels = c("WM-volume","WM-FA","GM-volume","GM-FA"))
-# REMUVE GM-FA Gray matter FA
+# REMUVES GM-FA Gray matter FA
 meta.GWm <- meta.GWm[meta.GWm$class!="GM-FA",]
 
 # get the names of the most common ROIs
@@ -375,8 +376,93 @@ ggplot(meta.GWm, aes(ROI)) +
 ```
 
 
-# Figure 3 - Meta-regressions of GM & WM by measure
-## Figure 3 - Gray Matter Volume: Random effects model no intercept covariated by Big area  
+# Gray and White matter relation with Age  
+```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.width=8,fig.height=10}
+GM.vol.R <- meta[meta$measure=="volume" & meta$matter=="GM" & meta$Side=="right",]
+GM.vol.L <- meta[meta$measure=="volume" & meta$matter=="GM" & meta$Side=="left",]
+WM.vol.R <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Side=="right",]
+WM.vol.L <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Side=="left",]
+WM.R <- meta[meta$matter=="WM" & meta$Side=="right",]
+WM.L <- meta[meta$matter=="WM" & meta$Side=="left",]
+GM.R <- meta[meta$matter=="GM" & meta$Side=="right",]
+GM.L <- meta[meta$matter=="GM" & meta$Side=="left",]
+
+# VOLUME fo LEFT & RIGHT
+grid.arrange(
+# GRAY MATTER LEFT
+ggplot(data = GM.vol.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Left-GM volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),  
+# GRAY MATTER RIGHT
+ggplot(data = GM.vol.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Right-GM volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+# WHITE MATTER LEFT - VOLUME
+ggplot(data = WM.vol.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Left-WM Volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)) +
+  scale_x_continuous(limits = c(0, 40)),
+# WHITE MATTER RIGTH - VOLUME
+ggplot(data = WM.vol.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Right-WM Volume vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)) +
+  scale_x_continuous(limits = c(0, 40)),
+ncol=2, nrow = 2)
+
+# ------------------------------------------
+grid.arrange(
+# GRAY MATTER LEFT - FA
+ggplot(data = GM.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Left Gray Matter vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# GRAY MATTER RIGTH - FA
+ggplot(data = GM.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Right Gray Matter vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# WHITE MATTER LEFT - FA
+ggplot(data = WM.L) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Left White Matter vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+# WHITE MATTER RIGTH - FA
+ggplot(data = WM.R) + 
+  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology)) +
+  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+  ggtitle("Right White Matter vs Age") +
+  labs(y='Hedge\'s G',x='Age') +
+  scale_y_continuous(limits = c(-6, 3)),
+
+ncol=2, nrow = 2)
+
+```  
+
+
+
+# CONGENITAL Figure 3 -  Meta-regressions of GM & WM by measure
+## CONGENITAL Figure 3 - Gray Matter Volume: Random effects model no intercept covariated by Big area  
 ```{r f3.GMvol-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
 # GRAY MATTER AND VOLUME sliced data
 meta.sliced <- meta[meta$measure=="volume" & meta$matter=="GM",]
@@ -540,67 +626,6 @@ cat("
   ")
 }
 ```  
-
-# Supplementary material: Gray and White matter relation with Age  
-```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.width=8,fig.height=10}
-GM.vol.R <- meta[meta$measure=="volume" & meta$matter=="GM" & meta$Side=="right",]
-GM.vol.L <- meta[meta$measure=="volume" & meta$matter=="GM" & meta$Side=="left",]
-WM.fa.R <- meta[meta$measure=="FA" & meta$matter=="WM" & meta$Side=="right",]
-WM.fa.L <- meta[meta$measure=="FA" & meta$matter=="WM" & meta$Side=="left",]
-WM.vol.R <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Side=="right",]
-WM.vol.L <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Side=="left",]
-
-grid.arrange(
-# GRAY MATTER LEFT
-ggplot(data = GM.vol.L) + 
-  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
-  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
-  ggtitle("Left-GM volume vs Age") +
-  labs(y='Hedge\'s G',x='Age') +
-  scale_y_continuous(limits = c(-6, 3)),  
-
-# GRAY MATTER RIGHT
-ggplot(data = GM.vol.R) + 
-  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
-  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
-  ggtitle("Right-GM volume vs Age") +
-  labs(y='Hedge\'s G',x='Age') +
-  scale_y_continuous(limits = c(-6, 3)),
-
-# WHITE MATTER LEFT - FA
-ggplot(data = WM.fa.L) + 
-  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
-  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
-  ggtitle("Left-WM FA vs Age") +
-  labs(y='Hedge\'s G',x='Age') +
-  scale_y_continuous(limits = c(-6, 3)),
-
-# WHITE MATTER RIGTH - FA
-ggplot(data = WM.fa.R) + 
-  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
-  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
-  ggtitle("Right-WM FA vs Age") +
-  labs(y='Hedge\'s G',x='Age') +
-  scale_y_continuous(limits = c(-6, 3)),
-
-# WHITE MATTER LEFT - VOLUME
-ggplot(data = WM.vol.L) + 
-  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
-  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
-  ggtitle("Left-WM Volume vs Age") +
-  labs(y='Hedge\'s G',x='Age') +
-  scale_y_continuous(limits = c(-6, 3)),
-
-# WHITE MATTER RIGTH - VOLUME
-ggplot(data = WM.vol.R) + 
-  geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4)) +
-  geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm) +
-  ggtitle("Right-WM Volume vs Age") +
-  labs(y='Hedge\'s G',x='Age') +
-  scale_y_continuous(limits = c(-6, 3)),
-ncol=2, nrow = 3)
-```  
-
 
   
 # Meta Plots  
