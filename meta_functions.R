@@ -141,6 +141,17 @@ plot.meta <- function(Model,Title){
 
 # ----------------------------------------------------------------------------------- #
 #### Cohen's D confidence intervals   #### 
+cohen.d <- function(u1, u2, s1, s2, n1, n2) {
+  # Pooled standard deviation for two independent samples
+  s <- sqrt(((n1-1)*s1^2 + (n2-1)*s2^2)/(n1+n2-2))
+  
+  # Cohen's D
+  D <- (u1-u2)/s
+  return(D)
+}
+
+# ----------------------------------------------------------------------------------- #
+#### Cohen's D confidence intervals   #### 
 cohen_ci <- function(d, N, Alpha) {
   # Hedges, L. V., & Olkin, I. (1985). Statistical methods for meta.
   # 1-alpha confidence interval = d +/- se * Zcrit
