@@ -3,7 +3,7 @@ close all
 %% Set paths
 % ---------------------------------------
 % home path
-koti='/home/rr/';
+koti='/host/yeatman/local_raid/rcruces/';
 % load toolboxes and define paths
 addpath([koti, 'matlab_toolbox/export_fig/'])
 addpath([koti, 'matlab_toolbox/surfstat'])
