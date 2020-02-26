@@ -4,6 +4,8 @@ close all
 % ---------------------------------------
 % home path
 koti='/host/yeatman/local_raid/rcruces/';
+% GitHUb path
+git=[koti,'git_here/']
 % load toolboxes and define paths
 addpath([koti, 'matlab_toolbox/export_fig/'])
 addpath([koti, 'matlab_toolbox/surfstat'])
@@ -11,7 +13,7 @@ addpath([koti, 'matlab_toolbox/surfstat'])
 % Working Directory
 P = [koti, 'git_here/MetaHearingLoss/'];
 % Results Directory
-RPATH = [koti, 'git_here/MetaHearingLoss/surfaceVis'];
+RPATH = [koti, 'tmp/Meta_figures'];
         if isequal(exist(RPATH, 'dir'),7)
             display('Directory Results/ already exists');
         else
@@ -19,18 +21,35 @@ RPATH = [koti, 'git_here/MetaHearingLoss/surfaceVis'];
         end
 addpath(P); addpath([P,'surfaceVis'])
 
+% Scientific Colormaps
+scimaps=load_scientific_colormaps(git);
+
 %% LOADS SURFACES
     % ---------------------------------------
     % SW= white matter surface  & SP = Pial Surface
-        cd('/home/rr/Escritorio/surfaces/fsaverage5')
+        cd([koti, '/atlas/fsaverage5'])
         SW = SurfStatReadSurf({'surf/lh.white','surf/rh.white'});
         SP = SurfStatReadSurf({'surf/lh.pial','surf/rh.pial'});
-
+        sphere = SurfStatReadSurf({'surf/lh.sphere','surf/rh.sphere'});
+        
     % generate a mid thickness surface 
     % SM = Surface Mean
         SM.coord = (SP.coord + SW.coord)./2; 
         SM.tri   = SP.tri; 
 
+    % Inflated mean surface
+        w=0.3;
+        maxs=max(SM.coord,[],2);
+        mins=min(SM.coord,[],2);
+        maxsp=max(sphere.coord,[],2);
+        minsp=min(sphere.coord,[],2);
+        SI=SM;
+        for i=1:3
+            SI.coord(i,:)=((sphere.coord(i,:)-minsp(i))/(maxsp(i)-minsp(i))...
+                *(maxs(i)-mins(i))+mins(i))*w+SM.coord(i,:)*(1-w);
+        end
+
+        
     % load LEFT:  Desikan-Killiany Atlas
         [~, label, colortable] = fs_read_annotation('label/lh.aparc.annot');
         aparcleft = label; 
@@ -51,10 +70,10 @@ addpath(P); addpath([P,'surfaceVis'])
         aparc = aparc'; 
         % QC plot
         f = figure; 
-        % position
+        viewSurf(aparc, SP, 'Destrieux', 'black')
         pos=[0 0 1260 275];
 
-            viewSurf(aparc, SP, '', 'white')
+            
 
     %% ---------------------------- 
     % VECTOR OF ALL LABELS
@@ -113,11 +132,11 @@ for i=area.insula+36; brain.areas(brain.areas==i)=15; end
 % occipital 4       14
 % insula    5       15
 % copus C   6       16
-
+mask=brain.areas~=0;
 viewSurf(brain.areas, SP, 'Brain Areas', 'white')
-SurfStatColLim([0 17])
+    SurfStatColLim([0 18])
 
-for i=area.cingulum;
+for i=area.cingulum
     brain.test=aparc;
     brain.test(brain.test==i)=1000;
     figure(i)
@@ -125,3 +144,20 @@ for i=area.cingulum;
     colormap(parula)
 end
 
+%% Load MNI152 1mm data
+cd([koti, 'atlas/MNI_to_fsaverage5']) 
+B=read_mgh('bilingua','fsaverage5.mgh',SM);
+S=read_mgh('bilingua','white.mgh',SM);
+
+figure
+midlatSurf(B, SP, 'Pial', 'white')
+    colormap([.65 .65 .65; scimaps.lajolla])
+    SurfStatColLim([0 7])    
+figure
+midlatSurf(S, SP, 'Pial', 'white')
+    colormap([.65 .65 .65; scimaps.lajolla])
+    SurfStatColLim([0 7])
+figure
+midlatSurf((B+S./2), SI, 'Pial & White', 'white')
+    colormap([.65 .65 .65; scimaps.lajolla])
+    SurfStatColLim([0 7])
