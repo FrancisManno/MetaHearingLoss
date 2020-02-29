@@ -1,0 +1,26 @@
+# ----------------------------------------------------------------------------- #
+# Instruccions for Surface ploting for Meta
+
+# ALE
+cp *_ALE*nii ../mri_results/
+cd ../mri_results/
+rm *luster_*
+# rename files
+for i in HearinglossTrail-19.06.2019ale_*; do mv -v $i ${i/HearinglossTrail-19.06.2019ale_/}; done
+for i in meta_sideDeaf_FAMrevised-19.06.2019ale_*; do mv -v $i ${i/meta_sideDeaf_FAMrevised-19.06.2019ale_/}; done
+for i in meta_sideDeaf_FAMrevised-19.06.2019aleS_*; do mv -v $i ${i/meta_sideDeaf_FAMrevised-19.06.2019aleS_/}; done
+for i in *_1k*; do mv -v $i ${i/_1k/}; done
+for i in *_ALE*; do mv -v $i ale_${i/_ALE/}; done
+
+for i in *nii; do
+    echo -e '\n Gzip the Nifti'
+    fslchfiletype NIFTI_GZ $i
+    echo -e '\n  Multiply by 10000'
+    fslmaths ${i}.gz -mul 10000 ${i/.nii}_10k.nii.gz
+    echo -e '\n  resize to 1x1x1'
+    mrresize -vox 1,1,1 ${i/.nii}_10k.nii.gz  ${i}.gz -force
+    echo -e '\n  Match strides to MNI152'
+    mrtransform -strides -1,2,3 ${i}.gz ${i}.gz -force
+    echo -e '\n  plot to surface'
+    fs_mni152_2_fsaverage5 ${i}.gz /host/yeatman/local_raid/rcruces/atlas ../surfaces/
+done

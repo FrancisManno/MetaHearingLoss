@@ -9,6 +9,9 @@ git=[koti,'git_here/']
 % load toolboxes and define paths
 addpath([koti, 'matlab_toolbox/export_fig/'])
 addpath([koti, 'matlab_toolbox/surfstat'])
+addpath([git, 'oma/matlab_scripts/surfStat'])   % fs_read_annotation
+addpath([git, 'oma/matlab_scripts'])            % load_scientific_colormaps
+addpath([git, 'MRI_MM_timing/Freesurfer'])      % read_mgh
 
 % Working Directory
 P = [koti, 'git_here/MetaHearingLoss/'];
@@ -38,7 +41,7 @@ scimaps=load_scientific_colormaps(git);
         SM.tri   = SP.tri; 
 
     % Inflated mean surface
-        w=0.3;
+        w=0.4;
         maxs=max(SM.coord,[],2);
         mins=min(SM.coord,[],2);
         maxsp=max(sphere.coord,[],2);
@@ -116,7 +119,7 @@ for i=area.occipital; brain.areas(brain.areas==i)=4; end
 % Insula    ID=5
 for i=area.insula; brain.areas(brain.areas==i)=5; end
 
-% RIGTH BRAIN AREAS
+% RIGHT BRAIN AREAS
 for i=area.temporal+36; brain.areas(brain.areas==i)=11; end
 for i=area.frontal+36; brain.areas(brain.areas==i)=12; end
 for i=area.parietal+36; brain.areas(brain.areas==i)=13; end
@@ -136,28 +139,33 @@ mask=brain.areas~=0;
 viewSurf(brain.areas, SP, 'Brain Areas', 'white')
     SurfStatColLim([0 18])
 
-for i=area.cingulum
-    brain.test=aparc;
-    brain.test(brain.test==i)=1000;
-    figure(i)
-    viewSurf(brain.test, SP, ['ID=',num2str(i),colortable.struct_names(i+1)], 'white')
-    colormap(parula)
-end
+% % QC cingulum
+% for i=area.cingulum
+%     brain.test=aparc;
+%     brain.test(brain.test==i)=1000;
+%     figure(i)
+%     viewSurf(brain.test, SP, ['ID=',num2str(i),colortable.struct_names(i+1)], 'white')
+%     colormap(parula)
+% end
 
 %% Load MNI152 1mm data
-cd([koti, 'atlas/MNI_to_fsaverage5']) 
-B=read_mgh('bilingua','fsaverage5.mgh',SM);
-S=read_mgh('bilingua','white.mgh',SM);
+cd([koti, 'data/OSF_meta/surfaces/fsaverage5']) 
+%% ACQUIRED
+% Load surfaces
+p=read_mgh('ale_acquired-Voxel','pial_fsaverage5.mgh',SM);
+w=read_mgh('ale_acquired-Voxel','white_fsaverage5.mgh',SM);
+% plot data
+figure
+midlatSurf((p+w./2).*mask, SI, 'Acquired', 'white')
+    colormap([.65 .65 .65; scimaps.lajolla])
+    SurfStatColLim([1 200])    
 
+%% CONGENITAL
+% Load surfaces
+p=read_mgh('ale_congenital-voxel','pial_fsaverage5.mgh',SM);
+w=read_mgh('ale_congenital-voxel','white_fsaverage5.mgh',SM);
+% plot data
 figure
-midlatSurf(B, SP, 'Pial', 'white')
+midlatSurf((p+w./2).*mask, SI, 'Acquired', 'white')
     colormap([.65 .65 .65; scimaps.lajolla])
-    SurfStatColLim([0 7])    
-figure
-midlatSurf(S, SP, 'Pial', 'white')
-    colormap([.65 .65 .65; scimaps.lajolla])
-    SurfStatColLim([0 7])
-figure
-midlatSurf((B+S./2), SI, 'Pial & White', 'white')
-    colormap([.65 .65 .65; scimaps.lajolla])
-    SurfStatColLim([0 7])
+    SurfStatColLim([1 200])    
