@@ -136,7 +136,8 @@ for i=area.insula+36; brain.areas(brain.areas==i)=15; end
 % insula    5       15
 % copus C   6       16
 mask=brain.areas~=0;
-viewSurf(brain.areas, SP, 'Brain Areas', 'white')
+viewSurf(brain.areas, SM, 'Brain Areas', 'white')
+    colormap([0 0 0; flipud(scimaps.roma); scimaps.roma])
     SurfStatColLim([0 18])
 
 % % QC cingulum
