@@ -1,7 +1,8 @@
 # ----------------------------------------------------------------------------- #
 # Instruccions for Surface ploting for Meta
 
-# ALE
+# ----------------------------------------------------------------------------- #
+#       ALE
 cp *_ALE*nii ../mri_results/
 cd ../mri_results/
 rm *luster_*
@@ -24,3 +25,70 @@ for i in *nii; do
     echo -e '\n  plot to surface'
     fs_mni152_2_fsaverage5 ${i}.gz /host/yeatman/local_raid/rcruces/atlas ../surfaces/
 done
+
+# ----------------------------------------------------------------------------- #
+#       SDM
+MyTest_z.nii.gz
+MyTest_z_uncorrected_p_0.05000_1.nii.gz
+MyTest_z_uncorrected_p_0.05000_1_neg.nii.gz
+
+# Copy files for surface ploting
+for i in `ls 00_*/all_analyses/analysis_MyTest*/*_z*gz`; do
+f=`echo $i | awk -F '/MyTest_' '{print $2}'`; cp -v $i sdm_nii/${f}; done
+# Change names
+for i in z*; do mv -v $i adult_${i}; done
+
+# Remove Q files
+rm *_Q_*
+
+# Add files with pval
+for i in adult aged gm wm pediatric; do
+  mrcalc ${i}_z_uncorrected_p_0.05000_1.nii.gz ${i}_z_uncorrected_p_0.05000_1_neg.nii.gz -add ${i}_thr_p05.nii.gz;
+done
+# remove some files
+rm *uncorrected*
+# resize to 1x1x1mm
+for i in *; do mrresize -vox 1,1,1 ${i} sdm_${i} -force; done
+
+# ------------------------
+# ACQUIRED & CONGENITAL
+for i in `ls ls SDManalysis_files/out_sdm_files*/analysis_MyTest*/*_z*gz`; do
+f=`echo $i | awk -F '/MyTest_' '{print $2}'`; cp -v $i sdm_nii/${f}; done
+rm z* *_Q_*
+for i in acq con; do
+  mrcalc ${i}_z_uncorrected_p_0.05000_1.nii.gz ${i}_z_uncorrected_p_0.05000_1_neg.nii.gz -add ${i}_thr_p05.nii.gz;
+done
+
+# ----------------------------------------------------------------------------- #
+#       mKDA
+RPATH=~/data/OSF_meta/Nii_results
+
+cd /Users/rcruces/data/OSF_meta/mKDA-analysis/newAnalyses/*ALLCONGENITAL
+# transforms files to nifti change names and copy
+for j in GM WM contrast; do cd currAnalysis_study_${j};
+  #for i in *.img; do fslchfiletype NIFTI $i; done
+  for k in Activation_FWE_all.nii.gz Activation_proportion.nii.gz; do
+    cp -v $k ${RPATH}/con_${j}_${k/Activation_/}; done
+  cd ..
+done
+
+cd /Users/rcruces/data/OSF_meta/mKDA-analysis/newAnalyses/*ALLACQUIRED
+# transforms files to nifti change names and copy
+for j in GM WM contrast; do cd currAnalysis_study_${j};
+  for i in *.img; do fslchfiletype NIFTI $i; done
+  for k in Activation_FWE_all.nii.gz Activation_proportion.nii.gz; do
+    cp -v $k ${RPATH}/acq_${j}_${k/Activation_/}; done
+  cd ..
+done
+
+wd=/Users/rcruces/data/OSF_meta/mKDA-analysis/newUnderlyingCuts/analyses
+for j in Adult AgedAdult GM WM pediatric; do
+  cd ${j}/study;
+  #for i in *.img; do fslchfiletype NIFTI $i; done
+  for k in Activation_FWE_all.nii.gz Activation_proportion.nii.gz; do
+    echo $j
+    cp -v $k ${RPATH}/${j}_${k/Activation_/}; done
+  cd $wd
+done
+
+for i in *gz; do mrresize -vox 1,1,1 ${i} mkda_${i} -force; done
