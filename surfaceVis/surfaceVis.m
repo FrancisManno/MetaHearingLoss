@@ -1,14 +1,14 @@
-clear all
 close all
 %% Set paths
 % ---------------------------------------
 % home path
-koti='/host/yeatman/local_raid/rcruces/';
+koti=getenv('KOTI');
 % GitHUb path
-git=[koti,'git_here/']
+git=[koti,'git_here/'];
 % load toolboxes and define paths
-addpath([koti, 'matlab_toolbox/export_fig/'])
-addpath([koti, 'matlab_toolbox/surfstat'])
+addpath([koti, 'matlab_toolbox/export_fig/'])   % export figures
+addpath([koti, 'matlab_toolbox/surfstat'])      % surfstats
+addpath([koti, 'git_here/oma/matlab_scripts/spharm/']) %hSurf
 addpath([git, 'oma/matlab_scripts/surfStat'])   % fs_read_annotation
 addpath([git, 'oma/matlab_scripts'])            % load_scientific_colormaps
 addpath([git, 'MRI_MM_timing/Freesurfer'])      % read_mgh
@@ -18,7 +18,7 @@ P = [koti, 'git_here/MetaHearingLoss/'];
 % Results Directory
 RPATH = [koti, 'tmp/Meta_figures'];
         if isequal(exist(RPATH, 'dir'),7)
-            display('Directory Results/ already exists');
+            disp('Directory Results/ already exists');
         else
             mkdir(RPATH)
         end
@@ -139,7 +139,7 @@ mask=brain.areas~=0;
 viewSurf(brain.areas, SM, 'Brain Areas', 'white')
     colormap([0 0 0; flipud(scimaps.roma); scimaps.roma])
     SurfStatColLim([0 18])
-
+    export_fig(strcat(RPATH,'/00_brain_areas.tif'),'-m3')
 % % QC cingulum
 % for i=area.cingulum
 %     brain.test=aparc;
@@ -151,22 +151,83 @@ viewSurf(brain.areas, SM, 'Brain Areas', 'white')
 
 %% Load MNI152 1mm data
 cd([koti, 'data/OSF_meta/surfaces/fsaverage5']) 
-%% ACQUIRED
-% Load surfaces
-p=read_mgh('ale_acquired-Voxel','pial_fsaverage5.mgh',SM);
-w=read_mgh('ale_acquired-Voxel','white_fsaverage5.mgh',SM);
-% plot data
-figure
-midlatSurf((p+w./2).*mask, SI, 'Acquired', 'white')
-    colormap([.65 .65 .65; scimaps.lajolla])
-    SurfStatColLim([1 200])    
 
-%% CONGENITAL
-% Load surfaces
-p=read_mgh('ale_congenital-voxel','pial_fsaverage5.mgh',SM);
-w=read_mgh('ale_congenital-voxel','white_fsaverage5.mgh',SM);
-% plot data
-figure
-midlatSurf((p+w./2).*mask, SI, 'Acquired', 'white')
-    colormap([.65 .65 .65; scimaps.lajolla])
-    SurfStatColLim([1 200])    
+%% ALE plots 
+Col=[.6 .6 .6; scimaps.lajolla];
+Lim=[1 200];
+SurfloadNplot('ale_congenital-voxel', SI, mask, 'ale_con', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('ale_acquired-Voxel', SI, mask, 'ale_acq', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('ale_Adult', SI, mask, 'ale_adult', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('ale_AgedAdult', SI, mask, 'ale_aged', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('ale_Pediatric', SI, mask, 'ale_pediatric', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('ale_GM', SI, mask, 'ale_GM', Col, Lim, RPATH, 1, 'p', 1);
+SurfloadNplot('ale_WM', SW, mask, 'ale_WM', [.75 .75 .75; scimaps.lajolla], Lim, RPATH, 1, 'w', 1);
+%% ALE Cluster
+Col=[0 0 0; [ones(255,2) zeros(255,1)]];
+SurfloadNplot('ale_congenital-voxel_FWE01', SI, mask, 'ale_con_FWE', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('ale_acquired-Voxel_FWE01', SI, mask, 'ale_acq_FWE', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('ale_Adult_C01', SI, mask, 'ale_adult_C01', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('ale_AgedAdult_C01', SI, mask, 'ale_aged_C01', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('ale_Pediatric_C01', SI, mask, 'ale_pediatric_C01', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('ale_GM_C01', SI, mask, 'ale_GM_C01', Col, Lim, RPATH, 1, 'p', 1);
+SurfloadNplot('ale_WM_C01', SW, mask, 'ale_WM_C01', Col, Lim, RPATH, 1, 'w', 1);
+
+
+%% SDM plots 
+Col=[scimaps.devon; repmat(.6,150,3); scimaps.lajolla];
+Lim=[-3 3];
+SurfloadNplot('sdm_con_z', SI, mask, 'sdm_con', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('sdm_acq_z', SI, mask, 'sdm_acq', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('sdm_adult_z', SI, mask, 'sdm_adult', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('sdm_aged_z', SI, mask, 'sdm_aged', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('sdm_pediatric_z', SI, mask, 'sdm_pediatric', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('sdm_gm_z', SI, mask, 'sdm_GM', Col, Lim, RPATH, 1, 'p', 1);
+SurfloadNplot('sdm_wm_z', SW, mask, 'sdm_WM', [scimaps.devon; .75 .75 .75; scimaps.lajolla], Lim, RPATH, 1, 'w', 1);
+%% SDM FWE
+Col=[0 0 0; [ones(255,2) zeros(255,1)]];
+Lim=[0 2];
+SurfloadNplot('sdm_con_thr_p05', SI, mask, 'sdm_con-thr', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('sdm_acq_thr_p05', SI, mask, 'sdm_acq-thr', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('sdm_adult_thr_p05', SI, mask, 'sdm_adult-thr', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('sdm_aged_thr_p05', SI, mask, 'sdm_aged-thr', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('sdm_pediatric_thr_p05', SI, mask, 'sdm_pediatric-thr', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('sdm_gm_thr_p05', SI, mask, 'sdm_GM-thr', Col, Lim, RPATH, 1, 'p', 1);
+SurfloadNplot('sdm_wm_thr_p05', SW, mask, 'sdm_WM-thr', Col, Lim, RPATH, 1, 'w', 1);
+
+
+%% mKDA plots 
+Col=[scimaps.devon; .6 .6 .6; scimaps.lajolla];
+colW=[scimaps.devon; .75 .75 .75; scimaps.lajolla];
+Lim=[-0.5 .5];
+SurfloadNplot('mkda_con_contrast_proportion', SI, mask, 'mkda_con', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_con_GM_proportion', SI, mask, 'mkda_con_GM', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_con_WM_proportion', SI, mask, 'mkda_con_WM', colW, Lim, RPATH, 1, 'b', 1);
+
+SurfloadNplot('mkda_acq_contrast_proportion', SI, mask, 'mkda_acq', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_acq_GM_proportion', SI, mask, 'mkda_acq_GM', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_acq_WM_proportion', SI, mask, 'mkda_acq_WM', colW, Lim, RPATH, 1, 'b', 1);
+
+SurfloadNplot('mkda_Adult_proportion', SI, mask, 'mkda_adult', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('mkda_AgedAdult_proportion', SI, mask, 'mkda_aged', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('mkda_pediatric_proportion', SI, mask, 'mkda_pediatric', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('mkda_GM_proportion', SI, mask, 'mkda_GM', Col, Lim, RPATH, 1, 'p', 1);
+SurfloadNplot('mkda_WM_proportion', SW, mask, 'mkda_WM', colW, Lim, RPATH, 1, 'w', 1);
+
+%% mKDA FWE
+Col=[0 0 0; [ones(255,2) zeros(255,1)]];
+Lim=[0 2];
+SurfloadNplot('mkda_con_contrast_FWE_all', SI, mask, 'mkda_con-fwe', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_con_GM_FWE_all', SI, mask, 'mkda_con_GM-fwe', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_con_WM_FWE_all', SI, mask, 'mkda_con_WM-fwe', Col, Lim, RPATH, 1, 'b', 1);
+
+SurfloadNplot('mkda_acq_contrast_FWE_all', SI, mask, 'mkda_acq-fwe', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_acq_GM_FWE_all', SI, mask, 'mkda_acq_GM-fwe', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_acq_WM_FWE_all', SI, mask, 'mkda_acq-fwe', Col, Lim, RPATH, 1, 'b', 1);
+
+SurfloadNplot('mkda_Adult_FWE_all', SI, mask, 'mkda_adult-fwe', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('mkda_AgedAdult_FWE_all', SI, mask, 'mkda_aged-fwe', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('mkda_pediatric_FWE_all', SI, mask, 'mkda_pediatric-fwe', Col, Lim, RPATH, 1, 'b', 0);
+SurfloadNplot('mkda_GM_FWE_all', SI, mask, 'mkda_GM-fwe', Col, Lim, RPATH, 1, 'p', 1);
+SurfloadNplot('mkda_WM_FWE_all', SW, mask, 'mkda_WM-fwe', Col, Lim, RPATH, 1, 'w', 1);
+
+
