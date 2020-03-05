@@ -201,11 +201,11 @@ colW=[scimaps.devon; .75 .75 .75; scimaps.lajolla];
 Lim=[-0.5 .5];
 SurfloadNplot('mkda_con_contrast_proportion', SI, mask, 'mkda_con', Col, Lim, RPATH, 1, 'b', 1);
 SurfloadNplot('mkda_con_GM_proportion', SI, mask, 'mkda_con_GM', Col, Lim, RPATH, 1, 'b', 1);
-SurfloadNplot('mkda_con_WM_proportion', SI, mask, 'mkda_con_WM', colW, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_con_WM_proportion', SW, mask, 'mkda_con_WM', colW, Lim, RPATH, 1, 'b', 1);
 
 SurfloadNplot('mkda_acq_contrast_proportion', SI, mask, 'mkda_acq', Col, Lim, RPATH, 1, 'b', 1);
 SurfloadNplot('mkda_acq_GM_proportion', SI, mask, 'mkda_acq_GM', Col, Lim, RPATH, 1, 'b', 1);
-SurfloadNplot('mkda_acq_WM_proportion', SI, mask, 'mkda_acq_WM', colW, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_acq_WM_proportion', SW, mask, 'mkda_acq_WM', colW, Lim, RPATH, 1, 'b', 1);
 
 SurfloadNplot('mkda_Adult_proportion', SI, mask, 'mkda_adult', Col, Lim, RPATH, 1, 'b', 0);
 SurfloadNplot('mkda_AgedAdult_proportion', SI, mask, 'mkda_aged', Col, Lim, RPATH, 1, 'b', 0);
@@ -218,11 +218,11 @@ Col=[0 0 0; [ones(255,2) zeros(255,1)]];
 Lim=[0 2];
 SurfloadNplot('mkda_con_contrast_FWE_all', SI, mask, 'mkda_con-fwe', Col, Lim, RPATH, 1, 'b', 1);
 SurfloadNplot('mkda_con_GM_FWE_all', SI, mask, 'mkda_con_GM-fwe', Col, Lim, RPATH, 1, 'b', 1);
-SurfloadNplot('mkda_con_WM_FWE_all', SI, mask, 'mkda_con_WM-fwe', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_con_WM_FWE_all', SW, mask, 'mkda_con_WM-fwe', Col, Lim, RPATH, 1, 'b', 1);
 
 SurfloadNplot('mkda_acq_contrast_FWE_all', SI, mask, 'mkda_acq-fwe', Col, Lim, RPATH, 1, 'b', 1);
 SurfloadNplot('mkda_acq_GM_FWE_all', SI, mask, 'mkda_acq_GM-fwe', Col, Lim, RPATH, 1, 'b', 1);
-SurfloadNplot('mkda_acq_WM_FWE_all', SI, mask, 'mkda_acq-fwe', Col, Lim, RPATH, 1, 'b', 1);
+SurfloadNplot('mkda_acq_WM_FWE_all', SW, mask, 'mkda_acq-WM-fwe', Col, Lim, RPATH, 1, 'b', 1);
 
 SurfloadNplot('mkda_Adult_FWE_all', SI, mask, 'mkda_adult-fwe', Col, Lim, RPATH, 1, 'b', 0);
 SurfloadNplot('mkda_AgedAdult_FWE_all', SI, mask, 'mkda_aged-fwe', Col, Lim, RPATH, 1, 'b', 0);

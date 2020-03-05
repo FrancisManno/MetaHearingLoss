@@ -7,6 +7,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/
 ```
 
 ```{r libs, echo=FALSE, message=FALSE, warnings=FALSE}
@@ -151,17 +152,24 @@ include.studies <- studies[,c("Source","Etiology","Severeity","Number.Hearing.lo
 colnames(include.studies) <- c("Source","Etiology","Severity","No.Patients","% Female Patients","Age.Patients","No.Control","% Female Control","Age.Control", "MRI Tesla") 
 
 # Print table
-Total <- matrix(c(sum(include.studies$No.Patients),sum(na.omit(include.studies$No.Control)),
-                  mean(include.studies$No.Patients),mean(na.omit(include.studies$No.Control)),
-                  sd(include.studies$No.Patients),sd(na.omit(include.studies$No.Control)),
-                  mean(na.omit(include.studies$Age.Patients)),mean(na.omit(include.studies$Age.Control)),
-                  sd(na.omit(include.studies$Age.Patients)),sd(na.omit(include.studies$Age.Control)), 
-                  mean(na.omit(include.studies$`% Female Patients`)),mean(na.omit(include.studies$`% Female Control`)),
-                  sd(na.omit(include.studies$`% Female Patients`)),sd(na.omit(include.studies$`% Female Control`))
-                  ), nrow = 7,ncol = 2,byrow = TRUE)
-rownames(Total) <- c("Total number of patients","Number mean","Number sd", "Age mean", "Age SD", "%Female mean", "%Female sd")
-colnames(Total) <- c("Hearing Loss", "Healthy")
-pander(Total,caption = "Total included studies: 41",split.table = Inf, graph.fontsize=3)
+print.data <- function(include.studies, Title) {
+  Total <- matrix(c(sum(include.studies$No.Patients),sum(na.omit(include.studies$No.Control)),
+                    mean(include.studies$No.Patients),mean(na.omit(include.studies$No.Control)),
+                    sd(include.studies$No.Patients),sd(na.omit(include.studies$No.Control)),
+                    mean(na.omit(include.studies$Age.Patients)),mean(na.omit(include.studies$Age.Control)),
+                    sd(na.omit(include.studies$Age.Patients)),sd(na.omit(include.studies$Age.Control)), 
+                    mean(na.omit(include.studies$`% Female Patients`)),mean(na.omit(include.studies$`% Female Control`)),
+                    sd(na.omit(include.studies$`% Female Patients`)),sd(na.omit(include.studies$`% Female Control`))
+  ), nrow = 7,ncol = 2,byrow = TRUE)
+  rownames(Total) <- c("Total number of patients","Number mean","Number sd", "Age mean", "Age SD", "%Female mean", "%Female sd")
+  colnames(Total) <- c("Hearing Loss", "Healthy")
+  N.inc <- length(unique(include.studies$Source))
+  obj <- pander(Total,caption = paste(Title, N.inc),split.table = Inf, graph.fontsize=3)
+}
+# All studies
+print.data(include.studies, 'Total unique studies')
+print.data(include.studies[include.studies$Etiology=='acquired',], 'Acquired studies')
+print.data(include.studies[include.studies$Etiology=='congenital',], 'Congenital studies')
 
 
 # --------------------------------------------------- #
@@ -183,7 +191,6 @@ rownames(include.studies) <- as.character(1:dim(include.studies)[1])
 \footnotesize
 
 ```{r lista, echo=FALSE, size = 'scriptsize'}
-
 # Table 2.1
 #panderOptions('table.alignment.default', c('left',rep('center',8)))
 #pander(include.studies[,1:9],caption = "Included studies",split.table = Inf, graph.fontsize=3)
@@ -208,7 +215,6 @@ pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "In
   
 
 # Overal view of the studies  
-
 ```{r lollip, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3}
 # Lollipop graphs
 grid.arrange(
@@ -220,6 +226,16 @@ par(mfrow=c(1,2))
 # Bar graph of frecuency
 bargraph(table(meta$Side)[order(table(meta$Side),decreasing = FALSE)][2:5],"Side of the Lesion")
 bargraph(table(meta$matter)[order(table(meta$matter),decreasing = FALSE)], "Area of Analysis")
+
+# Etiology by SEVERITY
+par(mfrow=c(1,2))
+Col <- c("#F8766D", "#00BFC4")
+barplot(table(studies$Etiology, studies$Severeity)[1:2,], main = "Severity", beside = FALSE, col=alpha(Col,0.6), border = Col, xlab='Number of studies', horiz = TRUE, las=2)
+
+# Etiology by EFFECT DIRECTION
+barplot(prop.table(table(meta$Etiology, meta$effect), 1)[,3:5],  main = "Effect direction", beside = TRUE, col=alpha(Col,0.6), xlab='Relative percentage', border = Col, horiz = TRUE, las=2)
+
+
 ```
   
   
@@ -234,6 +250,7 @@ ggMarginal(gg, type="histogram")
 
 ```
 
+\newpage
 
 # Frequency and contingensy tables
 a. Most of the studies that measured Gray matter focus on cortical changes (volume, thicknes and VBM).  
@@ -269,16 +286,10 @@ pander(table(meta$matter,meta$Side)[c(2,5),],caption = "Matter vs Side")
 pander(table(meta$matter,meta$measure)[c(2,5),],caption = "Matter vs measure")
 # Bar graph of frecuencies
 tablas <- table(meta$matter,meta$measure)
+
+# Indexing only gray and white matter
 G <- which(rownames(tablas)=="GM")
 W <- which(rownames(tablas)=="WM")
-  
-# 1 x 2
-grid.arrange(
-# GRAY MATTER MEASUREMENTS
-lollipop(tablas[G,order(tablas[G,],decreasing = T)[1:5]],"Gray Matter measures",c(0,200)),
-# WHITE MATTER MEASUREMENTS
-lollipop(tablas[W,order(tablas[W,],decreasing = T)[1:10]],"White Matter measures",c(0,200)),
-ncol=2, nrow = 1)
 ```
 
 \normalsize
@@ -288,7 +299,7 @@ Sub-analys were carried out in those areas that had measures from at least five 
 
 \footnotesize
 
-```{r tab2,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.height=3}
+```{r tab2,  echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
 # Contingensy table measure vs Big Area
 freq.table2 <- table(meta$Big.area,meta$measure)
 Ind <- order(apply(as.matrix(freq.table2),1,sum),decreasing = TRUE)
@@ -299,27 +310,22 @@ Ind <- order(apply(as.matrix(freq.table2),1,sum),decreasing = TRUE)
 freq.table <- table(meta$ROI,meta$measure)
 Indx <- order(apply(as.matrix(freq.table),1,sum),decreasing = TRUE)
 #pander(freq.table[Indx[1:16],],caption = "Table: Measure vs ROI")
-
-grid.arrange(
-# Frequency table: Gray matter volume Big areas: >5 studies
-lollipop(table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])>4],"GM-volume & Big areas\n >5 studies",c(0,60)),
-# Frequency table: White matter FA Big areas: >5 studies
-lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])>4],"WM-FA & Big areas\n >5 studies",c(0,60)),
-ncol=2, nrow = 1)
-
 ```
 
 \normalsize
 
-# Most common ROI for WM-FA and GM-volume
-```{r roi, echo=FALSE, warning=FALSE, message=FALSE}
-par(mfrow=c(1,2))
-# Lollipop graphs
-bargraph(table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])[table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])>2],"White matter FA ROIs: >5 studies")
+## Most common ROI for WM-FA and GM-volume
+```{r roi, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2}
+grid.arrange(
+# Frecuency of GM by Volume in all ROI
+lollipop(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])>4],"Gray Matter volume ROIs: >5 studies", Color="#008000", Ylim = c(0,20)),
 
-# Bar graph of frecuency
-bargraph(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])>4],"Gray Matter volume ROIs: >5 studies")
+# Frecuency of WM by FA in all ROI
+lollipop(table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])[table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])>2],"White matter FA ROIs: >5 studies", Color="#000080", Ylim = c(0,20)),
+nrow=1, ncol = 2)
 ```
+
+\newpage
 
 # Figure 1 - Methods: Distribution of data by Gray/white matter and measure  
 ```{r fig1a, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8,fig.height=2}
@@ -327,21 +333,21 @@ bargraph(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$
 tablas <- table(meta$matter,meta$measure)
 grid.arrange(
 # GRAY MATTER MEASUREMENTS 400w 175h  greater than 0= 1:14
-lollipop(tablas[G,order(tablas[G,],decreasing = T)[1:5]],"GM measures",c(0,150)),
+lollipop(tablas[G,order(tablas[G,],decreasing = T)[1:5]],"GM measures",c(0,200),Color = c("#008000",rep('#808080',4)), Order = FALSE),
 # WHITE MATTER MEASUREMENTS 400w 300h
-lollipop(tablas[W,order(tablas[W,],decreasing = T)[1:10]],"WM measures",c(0,150)),
+lollipop(tablas[W,order(tablas[W,],decreasing = T)[1:10]],"WM measures",c(0,200), Color = c("#000080","royalblue3", rep('#808080',8)), Order = FALSE),
 nrow=1, ncol = 2)
 
 grid.arrange(
 # Frequency table: Gray matter volume Big areas: > 5 studies
-lollipop(table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])>4],
-         "GM-volume & Big areas",c(0,60)),
+lollipop(table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="GM" & meta$measure=="volume"])>=4],
+         "GM-volume & Big areas",c(0,60), Color='#008000'),
 # Frequency table: White matter FA Big areas: >5 studies
-lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])>4],
-         "WM-FA & Big areas",c(0,60)),
+lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="FA"])>=4],
+         "WM-FA & Big areas",c(0,60), Color='#000080'),
 # Frequency table: White matter FA Big areas: >5 studies
-lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="volume"])>4],
-         "WM-volume & Big areas",c(0,60)),
+lollipop(table(meta$Big.area[meta$matter=="WM" & meta$measure=="volume"])[table(meta$Big.area[meta$matter=="WM" & meta$measure=="volume"])>=4],
+         "WM-volume & Big areas",c(0,60), Color = "royalblue3"),
 nrow=1, ncol = 3)
 
 # Insersect data by GM+WM and volume+FA

@@ -48,12 +48,12 @@ lollipop <- function(Table, Title, Ylim, Order=TRUE, Color="royalblue3") {
 
 # ----------------------------------------------------------------------------------- #
 #### Bar graph from frequency table  #### 
-bargraph <- function(Table,Title){
+bargraph <- function(Table,Title,Color="royalblue3"){
   require(extrafont)
   require(scales)
-  par(family="Sawasdee")
+  par(family="Tahoma")
   Table <- Table[order(Table,decreasing = FALSE)]
-  barplot(Table,horiz = TRUE,las=2,main=Title,space = 0.1,col = alpha("royalblue3",0.6),border = "royalblue3",lwd=1)
+  barplot(Table,horiz = TRUE,las=2,main=Title,space = 0.1,col = alpha(Color,0.6),border = Color,lwd=1)
 }
 
 # ----------------------------------------------------------------------------------- #
@@ -178,7 +178,7 @@ forestable <- function(DF){
   tabletext <- cbind(DF$Source,as.character(DF$Side),as.character(DF$N.total),round(DF$hedgesG,2),round(DF$varG,2))
   tabletext <- rbind(c("Study","Side","Number","Cohens'D","Variance"),tabletext)
   CI <- cohen_ci(DF$hedgesG, DF$N.total, 0.05)
-  own <- fpTxtGp(label = gpar(fontfamily = "Sawasdee"),ticks = gpar(cex=0.75),cex=0.5)
+  own <- fpTxtGp(label = gpar(fontfamily = "Tahoma"),ticks = gpar(cex=0.75),cex=0.5)
   forestplot(tabletext[-1,],mean = DF$hedgesG, lower = CI[,1], upper =CI[,2],
              clip=c(-6,2),txt_gp = own, boxsize=0.2,col=fpColors(box="royalblue",line="darkblue", summary="royalblue"), 
              xticks = seq(-6,2,2), grid = structure(c(1), gp = gpar(lty = 2, col = "#CCCCFF")),cex=0.05)
