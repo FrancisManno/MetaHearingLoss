@@ -78,7 +78,7 @@ sub.forest <- function(meta.mod, Title) { par(mfrow=c(1,1))
          ilab=cbind(round(meta.mod[,c("HL.age","Con.Age","N.total")],2),meta.mod$ROI),
          ilab.xpos=c(-12,-11,-10,-7.5), cex=0.75, ylim=c(-1, max(Row)+4),
          order=order(Sublevel,meta.mod$hedgesG),rows=Row,showweights = TRUE,
-         xlab="Hedge's G", mlab="", psize=1,col = "gray35",border = "gray35")
+         xlab="Hedge's G", mlab="", psize=1,col = "gray35",border = "gray35", col.predict = "blue")
   # All model text
   text(-16, -1, pos=4, cex=0.75, bquote(paste("RE Model for All Studies (Q = ",
                                               .(formatC(res$QE, digits=2, format="f")), ", df = ", .(res$k - res$p),
@@ -146,7 +146,7 @@ cohen.d <- function(u1, u2, s1, s2, n1, n2) {
   s <- sqrt(((n1-1)*s1^2 + (n2-1)*s2^2)/(n1+n2-2))
   
   # Cohen's D
-  D <- (u1-u2)/s
+  D <- (u2-u1)/s
   return(D)
 }
 
