@@ -215,7 +215,7 @@ pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "In
 \normalsize  
   
 # Relation between hearing loss (dB)  and age (Figure 2.D)  
-```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=3,fig.width=4}
+```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=3,fig.width=7}
 gg=ggplot(studies, mapping =aes(x=HL.age, y=Avg.dB.HL.mean)) +
   geom_point(mapping = aes(x = HL.age, y = Avg.dB.HL.mean, color=Etiology, size=Number.Hearing.loss), alpha = 50 / 100, position = "jitter") +
   geom_smooth(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), method = lm, color="gray45") +
@@ -228,7 +228,7 @@ ggMarginal(gg, type="histogram")
   
   
 # Studies characteristics (Figure 2.E, 2.F)  
-```{r lollip, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3}
+```{r lollip, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3, fig.width=7}
 # Lollipop graphs
 grid.arrange(
 lollipop(table(meta$measure),"MRI Measures",c(0,300)),
@@ -247,14 +247,14 @@ barplot(table(studies$Etiology, studies$Severeity)[1:2,], main = "Fig.2.E - Seve
 
 # Etiology by EFFECT DIRECTION
 barplot(prop.table(table(meta$Etiology, meta$effect), 1)[,3:5],  main = "Fig.2.F - Effect direction", beside = TRUE, col=alpha(Col,0.6), xlab='Relative percentage', border = Col, horiz = TRUE, las=2)
+# add legend
 
 
 ```
   
-\newpage
 
-## Brain structure (GM, WM) and MRI measures
-**Highlights**
+## Brain structure (GM, WM) and MRI measures  
+**Highlights**  
 a. Most of the studies that measured Gray matter focus on cortical changes (volume, thicknes and VBM).  
 b. White matter studies are more heterogeneous in their measurements.  
 c. Diffusion tensor (DT) derived mesurements are the most frequent in white matter, followed by volume.  
@@ -326,7 +326,7 @@ Indx <- order(apply(as.matrix(freq.table),1,sum),decreasing = TRUE)
 \normalsize
 
 ## Brain structure (GM, WM) by MRI measure (volume) and ROI  
-```{r roi, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2}
+```{r roi, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2, fig.width=7}
 grid.arrange(
 # Frecuency of GM by Volume in all ROI
 lollipop(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])>4],"Gray Matter volume ROIs: >5 studies", Color="#008000", Ylim = c(0,20)),
@@ -339,7 +339,7 @@ nrow=1, ncol = 2)
 \newpage
 
 # Studies characteristics (Figure 2.A, 2.B): Brain structure (GM, WM) by MRI measure (volume and FA) 
-```{r fig1a, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8,fig.height=2}
+```{r fig1a, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10,fig.height=2}
 # FRECUENCY BY MRI MEASURE
 tablas <- table(meta$matter,meta$measure)
 grid.arrange(
@@ -403,7 +403,7 @@ ggplot(meta.GWm, aes(ROI)) +
 
 
 ## Relations of all MRI measurements of GM and WM with age
-```{r GM.WM-age,  echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, results='asis'}
+```{r GM.WM-age,  echo=FALSE, warning=FALSE, message=FALSE, fig.height=7, results='asis'}
 meta.side <- meta[ meta$Side=="right" |meta$Side=="left" | meta$Side=="bilateral",]
 WM <- meta.side[meta.side$matter=="WM",]
 GM <- meta.side[meta.side$matter=="GM",]
@@ -491,7 +491,7 @@ ncol=2, nrow = 2)
   
   
 # White matter relation with Age by volume and FA (Figures 3.C, 3.D and 3.F)
-```{r corr.FA,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=7.5, fig.width=7}
+```{r corr.FA,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=7.5, fig.width=9}
 # ----------------------------------------------------------------------------
 # WHITE MATTER, LEFT & RIGHT
 grid.arrange(
@@ -556,7 +556,7 @@ ncol=2, nrow = 3)
   
   
 ## Gray and White matter relation with Age by asymmetry
-```{r corr.asy,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=2.5, fig.width=7}
+```{r corr.asy,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=2.5, fig.width=9}
 # ----------------------------------------------------------------------------
 grid.arrange(
 # ASSYMMETRIES GRAY MATTER
@@ -581,7 +581,7 @@ ncol=2, nrow = 1)
 ```    
   
 ## Table of estimates and meta-regression: WM and GM relation with age by MRI measures (volume and FA)
-```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3.5, fig.width=7}
+```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3.5, fig.width=9}
 # Model Correlation values
 struct.Age <- data.frame(rbind(
     t(cor.test(GM.vol.L$hedgesG, GM.vol.L$HL.age,use = 'pairwise.complete.obs')[c(4:3,1:2)]),
@@ -625,7 +625,7 @@ metareg.plot(GM.vol.L, 'GM vol left and Age')
 \newpage
   
 # Meta-regression: Variables by Etiology, Brain matter and MRI measure   
-```{r Meta.all,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3, fig.width=4}
+```{r Meta.all,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3, fig.width=6}
 # Dropin' levels
 meta.side$Side <- droplevels(meta.side$Side)
 meta.side$Etiology <- droplevels(meta.side$Etiology)
@@ -661,6 +661,9 @@ for (i in c("WM-volume", "GM-FA", "WM-FA", "GM+WM-volume")) {
   
   
 ## Gray Matter Volume: Random effects model no intercept covariated by Big area  
+  
+\scriptsize 
+
 ```{r congenital.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
 # CONGENITAL, GRAY MATTER AND VOLUME sliced data
 meta.sliced <- meta.side[meta.side$measure=="volume" & meta.side$matter=="GM" & meta.side$Etiology=="congenital",]
@@ -670,7 +673,7 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
-df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval )
+df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
 
@@ -686,7 +689,7 @@ hedgeG <- data.frame(id=rownames(df), GM.vol.C=df$HedgeG)
   
 ```{r congenital.GM.het,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
-plot.meta(result.rd,Title = "Gray Matter Volume")
+plot.meta(result.rd,Title = "Congenital - GM Volume")
 ```
 
 ## ACQUIRED - Meta-regressions of Gray Matter by Volume
@@ -701,7 +704,7 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
-df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,pval=result.rd$pval )
+df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ))
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
 
@@ -718,7 +721,7 @@ hedgeG <- merge(hedgeG, data.frame(id=rownames(df), GM.vol.A=df$HedgeG), by="id"
   
 ```{r acquire.GM.het,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
-plot.meta(result.rd,Title = "Gray Matter Volume")
+plot.meta(result.rd,Title = "Acquired - GM Volume")
 ```
 
 ## CONGENITAL - White Matter by VOLUME  
@@ -731,10 +734,9 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
-result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
-                 data = meta.reml)
-df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, 
-                 N=as.numeric(table(meta.reml$big.side)) )
+result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
+# Table of results
+df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
 
@@ -747,10 +749,10 @@ sub.forest(meta.reml,Title = "Congenital White Matter Volume")
   
 ```{r f3.WMvol-plot,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
-plot.meta(result.rd,Title = "Congenital White Matter Volume")
+plot.meta(result.rd,Title = "Congenital - WM Volume")
 ```
 
-## ACQUIRED - White Matter by VOLUME
+## ACQUIRED - White Matter by VOLUME (ONLY BILATERAL)
 Not enough values for the Random effects model no intercept covariated by Big area and Side (left or right)  
 
 ```{r f3.WMfa-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=6}
@@ -759,13 +761,23 @@ meta.sliced <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Etiology==
 meta.sliced$Side <- droplevels(meta.sliced$Side) 
 meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 
+meta.reml <- meta.sliced[meta.sliced$Side=="bilateral",]
+result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML", data = meta.reml)
+
 # Forest plot
 sub.forest(meta.sliced,Title = "acquired White Matter Volume")
+
+# Table of results
+df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
+rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
+pander(df)
 ```
+  
+Nothing is significant
   
 ```{r f3.WMfa-plot,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
-plot.meta(result.rd,Title = "acquired White Matter Volume")
+#plot.meta(result.rd,Title = "acquired BILATERAL \nWhite Matter Volume")
 ```
 
 ## CONGENITAL - White Matter by FA fractional anisotropy  
@@ -779,7 +791,7 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right" ,]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
-df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, N=as.numeric(table(meta.reml$big.side)) )
+df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
 
@@ -792,12 +804,11 @@ sub.forest(meta.reml,Title = "Congenital White Matter FA")
   
 ```{r WMfa.congenital.plot,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=8,fig.height=8}
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
-plot.meta(rma(yi=hedgesG, vi=varG, data = meta.reml, measure = "MD",method="REML",
-             slab=yrAu),Title = "Congenital White Matter FA")
+#plot.meta(rma(yi=hedgesG, vi=varG, data = meta.reml, measure = "MD",method="REML",slab=yrAu),Title = "Congenital White Matter FA")
 plot.meta(result.rd,Title = "Congenital White Matter FA")
 ```
-
-## ACQUIRED - White Matter by FA fractional anisotropy  
+  
+## ACQUIRED - White Matter by FA fractional anisotropy (ONLY RIGHT)  
 Random effects model no intercept covariated by Big area  
 ```{r WMfa.acquired,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=8}
 # WHITE MATTER AND VOLUME sliced data
@@ -809,8 +820,7 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
-df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, 
-                 N=as.numeric(table(meta.reml$big.side)) )
+df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,p.val=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
 
@@ -820,7 +830,16 @@ hedgeG$side <- apply(as.matrix(hedgeG$id),1, function(x) strsplit(as.character(x
 for (i in 1:dim(hedgeG)[1]) {hedgeG$area[i] <- gsub(hedgeG$side[i],replacement = "",x = hedgeG$id[i])}
 #write.csv(x = hedgeG, file = "hedgeG_estimates.csv",row.names = FALSE)
 
-#write.csv(hedgeG[order(hedgeG$area),],"metareg_estimates.csv",row.names = FALSE)
+lut.lab <- c('left temporal', 'left frontal', 'left parietal', 'left occipital', 'left insular cortex','left corpuscallosum','left cingulate'
+,'right temporal', 'right frontal', 'right parietal', 'right occipital', 'right insular cortex', 'right corpuscallosum','right cingulate')
+lut.num <- c(1:7, 11:17)
+N <- c()
+for (i in 1:dim(hedgeG)[1]) {
+  if (hedgeG$id[i] %in% lut.lab) {N <- c(N, lut.num[match(hedgeG$id[i], lut.lab)])}
+  else {N <- c(N, 0) }
+}
+hedgeG$N <- N
+write.csv(hedgeG[order(hedgeG$N),],"metareg_estimates.csv",row.names = FALSE)
 
 # Forest plot
 sub.forest(meta.reml,Title = "acquired White Matter FA")

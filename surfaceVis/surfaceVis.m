@@ -41,7 +41,7 @@ scimaps=load_scientific_colormaps(git);
         SM.tri   = SP.tri; 
 
     % Inflated mean surface
-        w=0.4;
+        w=0.25;
         maxs=max(SM.coord,[],2);
         mins=min(SM.coord,[],2);
         maxsp=max(sphere.coord,[],2);
@@ -92,13 +92,15 @@ scimaps=load_scientific_colormaps(git);
 %% ---------------------------- 
 % MERGE LABELS BY BRAIN REGION
     area.temporal  = [1,6,7,9,15,16,30,33,34];
-    area.frontal   = [2,23,3,12,14,17,18,19,20,24,27,28,32,26];
-    area.parietal  = [10,8,22,25,29,31];
+    %area.frontal   = [2,23,3,12,14,17,18,19,20,24,27,28,32,26];
+    %area.parietal  = [10,8,22,25,29,31];
     area.occipital = [5,11,13,21];
     area.insula    = 35;
     area.callosum  = 4;
+    
     area.cingulum  = [26, 23, 10, 2];
-
+    area.frontal   = [3,12,14,17,18,19,20,24,27,28,32];
+    area.parietal  = [8,22,25,29,31];
 % Brain vertices id
 brain.areas=aparc;
 
@@ -109,6 +111,9 @@ brain.areas(brain.areas==36)=0;
 % LEFT BRAIN AREAS
 % Temporal  ID=1
 for i=area.temporal; brain.areas(brain.areas==i)=1; end
+
+% Cingulum ID=7
+for i=area.cingulum; brain.areas(brain.areas==i)=7; end
 % Frontal   ID=2
 for i=area.frontal; brain.areas(brain.areas==i)=2; end
 % Parietal  ID=3
@@ -119,6 +124,8 @@ for i=area.occipital; brain.areas(brain.areas==i)=4; end
 % Insula    ID=5
 for i=area.insula; brain.areas(brain.areas==i)=5; end
 
+
+
 % RIGHT BRAIN AREAS
 for i=area.temporal+36; brain.areas(brain.areas==i)=11; end
 for i=area.frontal+36; brain.areas(brain.areas==i)=12; end
@@ -126,6 +133,7 @@ for i=area.parietal+36; brain.areas(brain.areas==i)=13; end
 for i=area.callosum+36; brain.areas(brain.areas==i)=16; end
 for i=area.occipital+36; brain.areas(brain.areas==i)=14; end
 for i=area.insula+36; brain.areas(brain.areas==i)=15; end
+for i=area.cingulum+36; brain.areas(brain.areas==i)=17; end
 
 % AREA      LEFT    RIGTH
 %--------------------------------
@@ -135,19 +143,73 @@ for i=area.insula+36; brain.areas(brain.areas==i)=15; end
 % occipital 4       14
 % insula    5       15
 % copus C   6       16
+% cingulum  7       17
+lut.num=[1:7 11:17];
+lut.lab={'L.temporal', 'L.frontal', 'L.parietal', 'L.occipital', 'L.insula', 'L.corpuscallosum', 'L.cingulum','R.temporal', 'R.frontal', 'R.parietal', 'R.occipital', 'R.insula', 'R.corpuscallosum', 'R.cingulum',}';
 mask=brain.areas~=0;
-viewSurf(brain.areas, SM, 'Brain Areas', 'white')
+viewSurf(brain.areas, SI, 'Brain Areas', 'white')
     colormap([0 0 0; flipud(scimaps.roma); scimaps.roma])
     SurfStatColLim([0 18])
-    export_fig(strcat(RPATH,'/00_brain_areas.tif'),'-m3')
+    %export_fig(strcat(RPATH,'/00_brain_areas.tif'),'-m3')
+    
 % % QC cingulum
-% for i=area.cingulum
-%     brain.test=aparc;
-%     brain.test(brain.test==i)=1000;
-%     figure(i)
-%     viewSurf(brain.test, SP, ['ID=',num2str(i),colortable.struct_names(i+1)], 'white')
-%     colormap(parula)
-% end
+for i=area.cingulum
+    brain.test=aparc;
+    brain.test(brain.test==i)=1000;
+    figure(i)
+    viewSurf(brain.test, SP, ['ID=',num2str(i),colortable.struct_names(i+1)], 'white')
+    colormap(parula)
+end
+
+for i=1:14
+    brain.test=brain.areas;
+    brain.test(brain.test==lut.num(i))=1000;
+    figure(i)
+    viewSurf(brain.test, SP, ['ID=',num2str(i),lut.lab(i)], 'white')
+    colormap(parula)
+end
+
+% Plot on Surface the ROIs
+Value=[-0.115968088128409
+-0.587984492932127
+-0.887484999306365
+-0.525152271595504
+0.0628004670784053
+0
+1.49995432559036
+-0.542741493811156
+-2.55931212324762
+-1.11250143291648
+-1.7301425483578
+-0.133917583262132
+0
+-0.801750649350649];
+
+val2=[-0.830154051262009
+-1.14006879458759
+0.389620086257098
+-1.39783185297582
+-1.35347024211868
+0
+-2.88345926666667
+0.72702164548263
+-1.43765580563091
+0.34050784672945
+-1.523678974543
+-1.52455436181408
+0
+-1.48261003943256];
+
+val=roi2annot(lut.num, val2', brain.areas);
+val1=roi2annot(lut.num, Value', brain.areas);
+
+
+viewSurf(val1.*mask, SI, 'Brain Areas', 'white')
+    colormap([scimaps.devon; [0 0 0]; scimaps.lajolla])
+    SurfStatColLim([-3 3])
+    viewSurf(val.*mask, SI, 'Brain Areas', 'white')
+    colormap([scimaps.devon; [0 0 0]; scimaps.lajolla])
+    SurfStatColLim([-3 3])
 
 %% Load MNI152 1mm data
 cd([koti, 'data/OSF_meta/surfaces/fsaverage5']) 

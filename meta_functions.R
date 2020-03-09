@@ -59,10 +59,11 @@ bargraph <- function(Table,Title,Color="royalblue3"){
 # ----------------------------------------------------------------------------------- #
 #### FOREST PLOT   #### 
 # https://cran.r-project.org/web/packages/forestplot/vignettes/forestplot.html
-sub.forest <- function(meta.mod, Title) { par(mfrow=c(1,1))
+sub.forest2 <- function(meta.mod, Title, res=NULL) { par(mfrow=c(1,1))
   # Random effect model
+  if (is.null(res)) {
   res <- rma(yi=hedgesG, vi=varG, data = meta.mod, measure = "MD",method="REML",
-             slab=yrAu)
+             slab=yrAu)}
   # weigths
   #O <- funnel(mod1,yaxis = "wi")
   
@@ -75,7 +76,7 @@ sub.forest <- function(meta.mod, Title) { par(mfrow=c(1,1))
   # par margins
   par(mar=c(4,4,1,2))
   forest(res, xlim=c(-16, 6), at=c(-5,0,3),
-         ilab=cbind(round(meta.mod[,c("HL.age","Con.Age","N.total")],2),meta.mod$ROI),
+         ilab=cbind(round(meta.mod[,c("HL.age","Con.Age","N.total")],2),meta.mod$big.side),
          ilab.xpos=c(-12,-11,-10,-7.5), cex=0.75, ylim=c(-1, max(Row)+4),
          order=order(Sublevel,meta.mod$hedgesG),rows=Row,showweights = TRUE,
          xlab="Hedge's G", mlab="", psize=1,col = "gray35",border = "gray35", col.predict = "blue")
@@ -100,6 +101,67 @@ sub.forest <- function(meta.mod, Title) { par(mfrow=c(1,1))
   ### add column headings to the plot
   text(c(-12,-11,-10,-7.5), D+2.5+max(K), c("Ptn", "Ctl", "N", "ROI"))
   text(c(-11.5),           D+3+max(K), c("Age"))
+  text(-16,               D+2.5+max(K), "Year & Author",  pos=4,font=2)
+  text(3,                 D+2.5+max(K), "Weights", pos=2,cex = 0.75)
+  text(6,                 D+2.5+max(K), "Hedge's G [95% CI]", pos=2, cex = 0.75)
+  
+  # Plot meta result for subsets
+  rem.text <- function(Subset,Ypos){
+    res.tmp <- rma(yi=hedgesG, vi=varG, data = meta.mod, measure = "MD",method="REML",
+                   slab=paste(year, study, sep=", "), subset=(Side==Subset))
+    addpoly(res.tmp, row=Ypos, cex=0.75, mlab="",col = "royalblue2",border = "royalblue2")
+    text(-16, Ypos, pos=4, cex=0.75, bquote(paste("RE Model for Subgroup (Q = ",
+                                                  .(formatC(res.tmp$QE, digits=2, format="f")), ", df = ", .(res.tmp$k - res.tmp$p),
+                                                  ", p = ", .(formatC(res.tmp$QEp, digits=2, format="f")), "; ", I^2, " = ",
+                                                  .(formatC(res.tmp$I2, digits=1, format="f")), "%)")))}
+  # Plot subsets results
+  Sub <- c(0,Sub)
+  for (i in 1:length(Noms)) { try(rem.text(Noms[i],Sub[i]+1)) }
+  
+  ### set par back to the original settings
+  par(op)}
+
+sub.forest <- function(meta.mod, Title, res=NULL) { par(mfrow=c(1,1))
+  # Random effect model
+  if (is.null(res)) {
+    res <- rma(yi=hedgesG, vi=varG, data = meta.mod, measure = "MD",method="REML",
+               slab=yrAu)}
+  # weigths
+  #O <- funnel(mod1,yaxis = "wi")
+  
+  ### to specify exactly in which rows the outcomes will be plotted)
+  Sublevel <- meta.mod$Side
+  D <- dim(meta.mod)[1]
+  RL <- as.vector(table(droplevels(Sublevel)))
+  K <- seq(1,by = 2,length.out = length(RL))
+  Row <- rep(K, times=RL) + 1:D
+  # par margins
+  par(mar=c(4,4,1,2))
+  forest(res, xlim=c(-16, 6), at=c(-5,0,3),
+         ilab=cbind(round(meta.mod[,c("N.total")],2),as.character(meta.mod$ROI), as.character(meta.mod$Big.area) ),
+         ilab.xpos=c(-11.5,-10,-7.5), cex=0.75, ylim=c(-1, max(Row)+4),
+         order=order(Sublevel,meta.mod$hedgesG),rows=Row,showweights = TRUE,
+         xlab="Hedge's G", mlab="", psize=1,col = "gray35",border = "gray35", col.predict = "blue")
+  # All model text
+  text(-16, -1, pos=4, cex=0.75, bquote(paste("RE Model for All Studies (Q = ",
+                                              .(formatC(res$QE, digits=2, format="f")), ", df = ", .(res$k - res$p),
+                                              ", p = ", .(formatC(res$QEp, digits=2, format="f")), "; ", I^2, " = ",
+                                              .(formatC(res$I2, digits=1, format="f")), "%)")))
+  ### font and save original settings in object 'op'
+  op <- par(cex=0.75, font=4, mar=c(5.1, 4.1, 4.1, 2.1))
+  
+  ### switch to bold font
+  par(font=2)
+  
+  # Subgroups
+  Noms <- names(table(droplevels(Sublevel)))
+  Sub <- max(Row)+1; for (i in length(Row):2) {if (Row[i]-Row[i-1]>1){Sub <- c(Row[i-1]+1,Sub)}}
+  text(-16, Sub, pos=4,Noms)
+  
+  # Main Title
+  text(-5,D+4+max(K), Title,cex = 1.5)
+  ### add column headings to the plot
+  text(c(-11.5,-10,-7.5), D+2.5+max(K), c("N", "ROI", "Area"))
   text(-16,               D+2.5+max(K), "Year & Author",  pos=4,font=2)
   text(3,                 D+2.5+max(K), "Weights", pos=2,cex = 0.75)
   text(6,                 D+2.5+max(K), "Hedge's G [95% CI]", pos=2, cex = 0.75)
