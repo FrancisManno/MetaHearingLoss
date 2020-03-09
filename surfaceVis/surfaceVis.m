@@ -12,6 +12,7 @@ addpath([koti, 'git_here/oma/matlab_scripts/spharm/']) %hSurf
 addpath([git, 'oma/matlab_scripts/surfStat'])   % fs_read_annotation
 addpath([git, 'oma/matlab_scripts'])            % load_scientific_colormaps
 addpath([git, 'MRI_MM_timing/Freesurfer'])      % read_mgh
+addpath([git, 'micasoft/sandbox/raul/MICA-MTL/2020_OHBM']) % roi2annot
 
 % Working Directory
 P = [koti, 'git_here/MetaHearingLoss/'];
@@ -124,8 +125,6 @@ for i=area.occipital; brain.areas(brain.areas==i)=4; end
 % Insula    ID=5
 for i=area.insula; brain.areas(brain.areas==i)=5; end
 
-
-
 % RIGHT BRAIN AREAS
 for i=area.temporal+36; brain.areas(brain.areas==i)=11; end
 for i=area.frontal+36; brain.areas(brain.areas==i)=12; end
@@ -153,63 +152,59 @@ viewSurf(brain.areas, SI, 'Brain Areas', 'white')
     %export_fig(strcat(RPATH,'/00_brain_areas.tif'),'-m3')
     
 % % QC cingulum
-for i=area.cingulum
-    brain.test=aparc;
-    brain.test(brain.test==i)=1000;
-    figure(i)
-    viewSurf(brain.test, SP, ['ID=',num2str(i),colortable.struct_names(i+1)], 'white')
-    colormap(parula)
+% for i=area.cingulum
+%     brain.test=aparc;
+%     brain.test(brain.test==i)=1000;
+%     figure(i)
+%     viewSurf(brain.test, SP, ['ID=',num2str(i),colortable.struct_names(i+1)], 'white')
+%     colormap(parula)
+% end
+% 
+% for i=1:14
+%     brain.test=brain.areas;
+%     brain.test(brain.test==lut.num(i))=1000;
+%     figure(i)
+%     viewSurf(brain.test, SP, ['ID=',num2str(i),lut.lab(i)], 'white')
+%     colormap(parula)
+% end
+
+% Meta regression BIG-AREA estimates Plot on Surface the ROIs
+mod.GMvolC=[-0.115968088, -0.587984493, -0.887484999, -0.525152272, 0.062800467, 0, 1.499954326, -0.542741494, -2.559312123, -1.112501433, -1.730142548, -0.133917583, 0, -0.801750649];
+mod.GMvolA=[-0.830154051, -1.140068795, 0.389620086, -1.397831853, -1.353470242, 0, -2.883459267, 0.727021645, -1.437655806, 0.340507847, -1.523678975, -1.524554362, 0, -1.482610039];
+mod.WMvolC=[-0.478048387, -1.340237902, -1.308139044, 0.502440237, 0.007912898, 0, -1.378645378, -0.552894497, -2.309850909, 0, 0, 0.736985692, 0, 0];
+mod.WMfaC=[-0.69803376, 0, 0, -0.72542994, 0, 0, 0.297000873, -0.829837182, 0, 0, -0.72542994, -0.81776699, 0, 0];
+
+% Meta regression BIG-AREA p values
+modP.GMvolC =[0.603853656, 0.188162824, 0.084783984, 0.250176514, 0.917530504, 1, 0.096942767, 0.046745516, 0.000339907, 0.012325121, 0.053414262, 0.82280821, 1, 0.501546243];
+modP.GMvolA =[0.183131914, 0.030445325, 0.680259682, 0.394545895, 0.409491814, 1, 0.095088675, 0.157333211, 0.040339808, 0.71885862, 0.061796312, 0.189771446, 1, 0.120168956];
+modP.WMvolC =[0.030575624, 0.0183781, 0.058501134, 0.299869946, 0.988530303, 1, 0.164860726, 0.0126575, 5.02E-05, 1, 1, 0.181932128, 1, 1];
+modP.WMfaC =[3.42E-08, 1, 1, 0.055661226, 1, 1, 0.316479315, 1.12E-15, 1, 1, 0.055661226, 0.064000549, 1, 1];
+
+% For loop over P.VALUES structure labels    
+fn = fieldnames(modP);
+pos=[0 0 1260 275];
+for k=1:numel(fn)
+    f=figure;
+    val=roi2annot(lut.num, modP.(fn{k})<0.05, brain.areas);
+    hSurf(val.*mask, SI, fn(k), 'white')
+    colormap([[0 0 0]; [1 0 0]])
+    set(f,'Position',pos)
+    SurfStatColLim([0 1])
+    export_fig(strcat(RPATH,'/metareg_',fn{k},'_pval.tif'),'-m3')
+    close(f)
 end
-
-for i=1:14
-    brain.test=brain.areas;
-    brain.test(brain.test==lut.num(i))=1000;
-    figure(i)
-    viewSurf(brain.test, SP, ['ID=',num2str(i),lut.lab(i)], 'white')
-    colormap(parula)
+% For loop over structure labels    
+fn = fieldnames(mod);
+for k=1:numel(fn)
+    f=figure;
+    val=roi2annot(lut.num, mod.(fn{k}), brain.areas);
+    hSurf(val.*mask, SI, fn(k), 'white')
+    colormap([scimaps.vik(1:128,1:3); [0.65 0.65 0.65]; scimaps.vik(129:256,1:3)])
+    set(f,'Position',pos)
+    SurfStatColLim([-3 3])
+    export_fig(strcat(RPATH,'/metareg_',fn{k},'.tif'),'-m3')
+    close(f)
 end
-
-% Plot on Surface the ROIs
-Value=[-0.115968088128409
--0.587984492932127
--0.887484999306365
--0.525152271595504
-0.0628004670784053
-0
-1.49995432559036
--0.542741493811156
--2.55931212324762
--1.11250143291648
--1.7301425483578
--0.133917583262132
-0
--0.801750649350649];
-
-val2=[-0.830154051262009
--1.14006879458759
-0.389620086257098
--1.39783185297582
--1.35347024211868
-0
--2.88345926666667
-0.72702164548263
--1.43765580563091
-0.34050784672945
--1.523678974543
--1.52455436181408
-0
--1.48261003943256];
-
-val=roi2annot(lut.num, val2', brain.areas);
-val1=roi2annot(lut.num, Value', brain.areas);
-
-
-viewSurf(val1.*mask, SI, 'Brain Areas', 'white')
-    colormap([scimaps.devon; [0 0 0]; scimaps.lajolla])
-    SurfStatColLim([-3 3])
-    viewSurf(val.*mask, SI, 'Brain Areas', 'white')
-    colormap([scimaps.devon; [0 0 0]; scimaps.lajolla])
-    SurfStatColLim([-3 3])
 
 %% Load MNI152 1mm data
 cd([koti, 'data/OSF_meta/surfaces/fsaverage5']) 

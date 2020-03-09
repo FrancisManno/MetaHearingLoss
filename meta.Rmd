@@ -615,7 +615,7 @@ bubble(output.metareg, main=Title, pty='n',
        xlab = "Age",
        col.line = "blue",
        studlab = TRUE, min.cex = 0.5, max.cex = 2) 
-#print(output.metareg)
+print(output.metareg)
 }
 par(mfrow=c(1,2))
 metareg.plot(WM.fa.R, 'WM FA right and Age')
@@ -682,6 +682,7 @@ sub.forest(meta.reml,Title = "Congenital - Gray Matter Volume")
 
 # estimates 
 hedgeG <- data.frame(id=rownames(df), GM.vol.C=df$HedgeG)
+pvals <- data.frame(id=rownames(df), GM.vol.C=df$pval)
 # Confidence intervals of the heterogeneity
 #print(result.rd)
 #pander(confint(result.rd))
@@ -713,6 +714,7 @@ sub.forest(meta.reml,Title = "Acquired - Gray Matter Volume")
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), GM.vol.A=df$HedgeG), by="id",all = T)
+pvals <- merge(pvals,  data.frame(id=rownames(df), GM.vol.A=df$pval), by="id",all = T)
 
 # Confidence intervals of the heterogeneity
 #print(result.rd)
@@ -742,6 +744,7 @@ pander(df)
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.vol.C=df$HedgeG), by="id",all = T)
+pvals <- merge(pvals,  data.frame(id=rownames(df), WM.vol.C=df$pval), by="id",all = T)
 
 # Forest plot
 sub.forest(meta.reml,Title = "Congenital White Matter Volume")
@@ -797,6 +800,7 @@ pander(df)
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.fa.C=df$HedgeG), by="id",all = T)
+pvals <- merge(pvals, data.frame(id=rownames(df), WM.fa.C=df$pval), by="id",all = T)
 
 # Forest plot
 sub.forest(meta.reml,Title = "Congenital White Matter FA")
@@ -826,9 +830,14 @@ pander(df)
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.fa.A=df$HedgeG), by="id",all = T)
-hedgeG$side <- apply(as.matrix(hedgeG$id),1, function(x) strsplit(as.character(x), " ")[[1]][1])
+pvals <- merge(pvals, data.frame(id=rownames(df), WM.fa.A=df$p.val), by="id",all = T)
+
+# order tables
+pvals$side <- hedgeG$side <- apply(as.matrix(hedgeG$id),1, function(x) strsplit(as.character(x), " ")[[1]][1])
+ 
 for (i in 1:dim(hedgeG)[1]) {hedgeG$area[i] <- gsub(hedgeG$side[i],replacement = "",x = hedgeG$id[i])}
-#write.csv(x = hedgeG, file = "hedgeG_estimates.csv",row.names = FALSE)
+colnames(pvals)[2:6] <- paste0(colnames(pvals)[2:6], ".Pval")
+hedgeG <- merge(hedgeG, pvals[,1:6], by='id')
 
 lut.lab <- c('left temporal', 'left frontal', 'left parietal', 'left occipital', 'left insular cortex','left corpuscallosum','left cingulate'
 ,'right temporal', 'right frontal', 'right parietal', 'right occipital', 'right insular cortex', 'right corpuscallosum','right cingulate')
@@ -839,7 +848,7 @@ for (i in 1:dim(hedgeG)[1]) {
   else {N <- c(N, 0) }
 }
 hedgeG$N <- N
-write.csv(hedgeG[order(hedgeG$N),],"metareg_estimates.csv",row.names = FALSE)
+#write.csv(hedgeG[order(hedgeG$N),],"metareg_estimates.csv",row.names = FALSE)
 
 # Forest plot
 sub.forest(meta.reml,Title = "acquired White Matter FA")
