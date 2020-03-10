@@ -625,7 +625,7 @@ metareg.plot(GM.vol.L, 'GM vol left and Age')
 \newpage
   
 # Meta-regression: Variables by Etiology, Brain matter and MRI measure   
-```{r Meta.all,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3, fig.width=6}
+```{r Meta.all,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=7.5, fig.width=7}
 # Dropin' levels
 meta.side$Side <- droplevels(meta.side$Side)
 meta.side$Etiology <- droplevels(meta.side$Etiology)
@@ -641,7 +641,26 @@ meta.mri$Side <- factor(meta.mri$Side, levels = c("left", "right", "bilateral"))
 mod1 <- table(meta.mri$Side, meta.mri$Etiology,  meta.mri$model)
 
 # Variables per brain matter MRI measure
-lollipop(table(meta.mri$model), "Variables per brain matter MRI measure", Ylim = c(0,200))
+# lollipop(table(meta.mri$model), "Variables per brain matter MRI measure", Ylim = c(0,200))
+
+# Sliced only surface data
+surf <- c("cingulate", "frontal", "insular cortex", "occipital", "parietal", "temporal")
+meta.surf <- meta.mri[meta.mri$Big.area %in% surf,]
+meta.surf <- meta.surf[meta.surf$Side!='bilateral',]
+meta.surf$Big.area <- droplevels(meta.surf$Big.area)
+meta.surf$Side <- droplevels(meta.surf$Side)
+meta.surf$areas <- factor(paste0(meta.surf$Side,'.',meta.surf$Big.area))
+tab1 <- table(meta.surf$areas, meta.surf$Etiology,  meta.surf$model)
+# bar plot Left and right per model
+par(mfrow=c(3,2))
+Col <- rep(c("darkolivegreen3", "gold2"), each=6)
+for (k in unique(meta.surf$model)){
+  obj <- barplot(tab1[,,k], beside = TRUE, main = k, col=rep(c("darkolivegreen3", "gold2"), each=6), border = 'white', ylim = c(0,20), names  = c("",""))
+  axis(side = 1,at = c(obj[,1], obj[,2]), labels = rep(surf,4),las=2, tick = FALSE, pos = -0.1)
+  legend(20,15,c("Left", "Right") ,fill = c("darkolivegreen3", "gold2"), border = c("darkolivegreen3", "gold2"), bty = 'n')
+  mtext("Congenital", 3,at = obj[6,1])
+  mtext("Acquired", 3,at = obj[6,2])
+}
 ```
   
   

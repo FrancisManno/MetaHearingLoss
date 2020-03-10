@@ -17,14 +17,14 @@ X <- df$X1 # Age
 Y <- df$X2 # Hedges'G
 N <- scaleBetween(df$X4,1,4) # Total Size
 G <- c("red4","blue4")[df$X5]
-f <-lm(X2~X1,data = df)
+f <-lm(Y~X,data = df)
 
 par(mfrow=c(1,2))
 plot(jitter(X,10),Y, xlab = "Age", ylab="Hedge's G", main= Main, bty="n",cex=N,pch=21,bg=alpha(G,0.6),col=G)
 
 # Confidence Intervals at 95%
 newx <- seq(min(X,na.rm = T), max(X,na.rm = T), length.out=length(X))
-preds <- predict(f, 20,interval="confidence")
+preds <- predict(f, interval="confidence")
 polygon(c(rev(newx), newx), c(rev(preds[ ,3]), preds[ ,2]), col = alpha('gray45',0.4), border = NA)
 
 abline(f,col="gray35",lwd=2)
@@ -40,7 +40,7 @@ pval <- 2*pnorm(-abs(tstats))
 par(new=TRUE)
 
 ## Plot the second plot and put axis scale on right
-plot(newx, pval, pch=15,  xlab="", ylab="", ylim=c(0,0.05), 
+plot(newx, 1-pval, pch=15,  xlab="", ylab="", ylim=c(0.95,1), 
      axes=FALSE, type="l", col="red")
 ## a little farther out (line=4) to make room for labels
 mtext("p-value",side=4,col="red",line=-1.5) 
@@ -109,7 +109,7 @@ reg.conf.intervals <- function(x, y, Group, Cex, Ylim, Main) {
   text(paste("Intercept:", round(summary(lm.model)$coefficients[1],2), 
               "pval=",round(summary(lm.model)$coefficients[1,4],3)),x = 50,y=1)
   text(paste("Age:", round(summary(lm.model)$coefficients[2],2), 
-              "pval=",summary(lm.model)$coefficients[2,4]),x = 50,y=0)
+              "pval=",round(summary(lm.model)$coefficients[2,4],3)),x = 50,y=0)
   
   # Calculate the p-value based on a normal distribution
   se <- (bands[,1]-bands[,2])/(2*1.96)
@@ -121,10 +121,10 @@ reg.conf.intervals <- function(x, y, Group, Cex, Ylim, Main) {
   
   ## Plot the second plot and put axis scale on right
   plot(x_new2, pval, pch=15,  xlab="", ylab="", ylim=c(0,0.05), 
-       axes=FALSE, type="l", col="lightcyan4")
+       axes=FALSE, type="l", col="red3")
   ## a little farther out (line=4) to make room for labels
-  mtext("p-value",side=4,col="lightcyan4",line=1) 
-  #axis(4, ylim=c(0,0.05), col="red",col.axis="red",las=2,pos = 65)
+  mtext("p-value",side=4,col="red3",line=1) 
+  axis(4, ylim=c(0,0.05), col="red",col.axis="red",las=2)
   
   # return(bands)
 }
@@ -151,7 +151,7 @@ svg("~/Escritorio/2018_hearing_loss/MetaAnalysis/fig_tmp/right_WMvol~age.svg",wi
 plot.Slice(WM.vol.R, c(-6,3), "Right White Matter Volume vs Age"); dev.off()
 
 svg("~/Escritorio/2018_hearing_loss/MetaAnalysis/fig_tmp/left_WMvol~age.svg",width = 7,height = 5,pointsize = 13)
-plot.Slice(WM.vol.L, c(-6,3), "Left White Matter Volume vs Age"); dev.off()
+plot.Slice(WM.vol.L, c(-6,4), "Left White Matter Volume vs Age"); dev.off()
 
 svg("~/Escritorio/2018_hearing_loss/MetaAnalysis/fig_tmp/right_WMfa~age.svg",width = 7,height = 5,pointsize = 13)
 plot.Slice(WM.fa.R, c(-2,3), "Right White Matter FA vs Age"); dev.off()

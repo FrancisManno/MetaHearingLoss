@@ -186,7 +186,7 @@ pos=[0 0 1260 275];
 for k=1:numel(fn)
     f=figure;
     val=roi2annot(lut.num, modP.(fn{k})<0.05, brain.areas);
-    hSurf(val.*mask, SI, fn(k), 'white')
+    hSurfNone(val.*mask, SI, fn(k), 'white')
     colormap([[0 0 0]; [1 0 0]])
     set(f,'Position',pos)
     SurfStatColLim([0 1])
@@ -202,8 +202,8 @@ for k=1:numel(fn)
     colormap([scimaps.vik(1:128,1:3); [0.65 0.65 0.65]; scimaps.vik(129:256,1:3)])
     set(f,'Position',pos)
     SurfStatColLim([-3 3])
-    export_fig(strcat(RPATH,'/metareg_',fn{k},'.tif'),'-m3')
-    close(f)
+    %export_fig(strcat(RPATH,'/metareg_',fn{k},'.tif'),'-m3')
+    %close(f)
 end
 
 %% Load MNI152 1mm data
