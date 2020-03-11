@@ -428,7 +428,7 @@ ncol=1, nrow = 2)
 ```
   
 # Gray matter relation with Age by volume (Figures 3.A and 3.B)
-```{r corr.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=5, fig.width=7}
+```{r corr.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=5, fig.width=9}
 # GRAY AND WHITE MATTER BY SIDE
 WM.R <- WM[WM$Side=="right",]
 WM.L <- WM[WM$Side=="left",]
@@ -581,7 +581,7 @@ ncol=2, nrow = 1)
 ```    
   
 ## Table of estimates and meta-regression: WM and GM relation with age by MRI measures (volume and FA)
-```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=3.5, fig.width=9}
+```{r corr,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=5, fig.width=9}
 # Model Correlation values
 struct.Age <- data.frame(rbind(
     t(cor.test(GM.vol.L$hedgesG, GM.vol.L$HL.age,use = 'pairwise.complete.obs')[c(4:3,1:2)]),
@@ -615,7 +615,7 @@ bubble(output.metareg, main=Title, pty='n',
        xlab = "Age",
        col.line = "blue",
        studlab = TRUE, min.cex = 0.5, max.cex = 2) 
-print(output.metareg)
+#return(output.metareg)
 }
 par(mfrow=c(1,2))
 metareg.plot(WM.fa.R, 'WM FA right and Age')
@@ -692,6 +692,9 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
+# print model estimates
+print.reml(result.rd, "Congenital - Gray Matter Volume")
+# table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
@@ -724,6 +727,9 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
+# print model estimates
+print.reml(result.rd, "Acquired - Gray Matter Volume")
+# table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ))
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
@@ -756,7 +762,9 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
-# Table of results
+# print model estimates
+print.reml(result.rd, "Congenital White Matter Volume")
+# table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
@@ -785,14 +793,17 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 
 meta.reml <- meta.sliced[meta.sliced$Side=="bilateral",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML", data = meta.reml)
-
-# Forest plot
-sub.forest(meta.sliced,Title = "acquired White Matter Volume")
+# print model estimates
+print.reml(result.rd, "acquired White Matter Volume")
 
 # Table of results
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
+
+# Forest plot
+sub.forest(meta.sliced,Title = "acquired White Matter Volume")
+
 ```
   
 Nothing is significant
@@ -813,6 +824,10 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right" ,]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
+# print model estimates
+print.reml(result.rd, "Congenital White Matter FA")
+
+# table
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)
@@ -843,6 +858,10 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
+# print model estimates
+print.reml(result.rd, "acquired White Matter FA")
+
+# table for estimates
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,p.val=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
 pander(df)

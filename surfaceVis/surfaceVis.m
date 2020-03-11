@@ -182,28 +182,29 @@ modP.WMfaC =[3.42E-08, 1, 1, 0.055661226, 1, 1, 0.316479315, 1.12E-15, 1, 1, 0.0
 
 % For loop over P.VALUES structure labels    
 fn = fieldnames(modP);
-pos=[0 0 1260 275];
+surfaces={SI SI SW SW};
+pos=[0 0 700 500];
 for k=1:numel(fn)
     f=figure;
     val=roi2annot(lut.num, modP.(fn{k})<0.05, brain.areas);
-    hSurfNone(val.*mask, SI, fn(k), 'white')
+    midlatSurfNone(val.*mask, surfaces{k}, fn(k), 'white')
     colormap([[0 0 0]; [1 0 0]])
     set(f,'Position',pos)
     SurfStatColLim([0 1])
-    export_fig(strcat(RPATH,'/metareg_',fn{k},'_pval.tif'),'-m3')
-    close(f)
+     export_fig(strcat(RPATH,'/metareg_',fn{k},'_pval.tif'),'-m3')
+     close(f)
 end
 % For loop over structure labels    
 fn = fieldnames(mod);
 for k=1:numel(fn)
     f=figure;
     val=roi2annot(lut.num, mod.(fn{k}), brain.areas);
-    hSurf(val.*mask, SI, fn(k), 'white')
+    midlatSurf(val.*mask, surfaces{k}, fn(k), 'white')
     colormap([scimaps.vik(1:128,1:3); [0.65 0.65 0.65]; scimaps.vik(129:256,1:3)])
     set(f,'Position',pos)
     SurfStatColLim([-3 3])
-    %export_fig(strcat(RPATH,'/metareg_',fn{k},'.tif'),'-m3')
-    %close(f)
+    export_fig(strcat(RPATH,'/metareg_',fn{k},'.tif'),'-m3')
+    close(f)
 end
 
 %% Load MNI152 1mm data
