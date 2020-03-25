@@ -1,11 +1,9 @@
 ---
-title: "Hearing loss meta-analysis"
-author: "Francis Manno PhD & Raúl R. Cruces PhD"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+title: "How hearing loss across the lifespan affects the brain: Structural correlates of hearing loss assessed by coordinate mapping using quantitative metrics of gray and white matter trajectories - Systematic review, meta-analysis and meta-regression"
+author: "" 
 output:
-  pdf_document:
-    toc: true
-    toc_depth: 2
+  pdf_document
+
 ---
 
 ```{r setup, include=FALSE}
@@ -34,6 +32,38 @@ library(metafor)
 library(rmeta)
 library(forestplot)  # Forestplot for meta-regression visualization
 ```
+  
+Francis A. M. Manno DPhil, $PhD^{1,2}$^†, Raul Rodríguez-Cruces $MD, PhD^3*$, Rachit Kumar $BS^4*$, Yilai Shu $MD, PhD^5$, J. Tilak Ratnanather $DPhil^6$, Condon Lau $PhD^2$  
+  
+\small
+**1.** School of Biomedical Engineering, Faculty of Engineering, University of Sydney, Sydney, New South Wales, Australia  
+**2.** Department of Physics, City University of Hong Kong, Kowloon, Hong Kong SAR, China  
+**3.** Montreal Neurological Institute, McGill University, Montreal, Canada  
+**4.** Wallace H. Coulter Department of Biomedical Engineering, Georgia Institute of Technology and Emory University, Atlanta, GA, USA  
+**5.** ENT Institute and Otorhinolaryngology Department of the Affiliated Eye and ENT Hospital, State Key Laboratory of Medical   Neurobiology, Institutes of Biomedcial Sciences, Fudan University, Shanghai, China  
+**6.** Center for Imaging Science and Institute for Computational Medicine, Department of Biomedical Engineering, Johns Hopkins University, Baltimore, MD, USA  
+\normalsize
+\newline  
+**Data availability statement:** The entire dataset, analyses and code used in this work can be downloaded by contacting the corresponding author and from the Open Science Framework: Manno, et al., 2018. “Profound Hearing Loss.” OSF. https://osf.io/7y59j/.  
+\newline  
+**Declaration of Interests:** The authors declare no competing financial interests and no non-financial competing interests.  
+\newline  
+**Author Contributions:** Conceptualization, FAMM JTR, CL; Methodology, FAMM, RRC; Formal Analysis, FAMM, RRC, RK; Visualization FAMM, RRC, RK; Investigation, FAMM, JTR; Writing, Editing, Funding FAMM, RRC, RK, YS, JTR, CL.  
+\newline  
+\newline  
+**†Corresponding Author:**  
+Francis A.M. Manno  
+School of Biomedical Engineering  
+Faculty of Engineering, The University of Sydney  
+Sydney, New South Wales, Australia  
+Email: Francis.Manno@Sydney.edu.au  
+\newline  
+**Keywords:** sensorineural hearing loss, structural MRI, bilateral hearing loss, unilateral hearing loss, deaf  
+
+\newpage 
+\tableofcontents 
+\listoftables
+\newpage
 
 # Methods  
 ## Eligibility Criteria  
@@ -41,9 +71,11 @@ We included peer-review publications in English, involving patients with bilater
 A total of 59 studies were included, 6 of them contained incomplete information. A total of 2778 patients and 4214 controls.  
 Notes for inclusion:  
 \begin{enumerate}
-\item I excluded Xia et al. Chin J Rad, 2008 because I don't understand chinese and it appears to be the same data as Xia et al. Chin J Med Img Tech, 2008.  
-\item  Kim et al. Hear Res 2014 used two groups prelingual deaf and post lingual deaf, I used the average for the main table.  
-\item  Xia et al. Chin J Med Img Tech, 2008 had a total of 40 patients, two groups 9-12 years and 19-22 years, no controls.  
+\item Xia et al. Chin J Rad, 2008 was excluded because it appears to be the same data as Xia et al. Chin J Med Img Tech, 2008.  
+\item  Kim et al. Hear Res 2014 used two groups \textit{prelingual deaf} and \textit{post lingual deaf}, we used the average for the main table. 
+\item  Xia et al. Chin J Med Img Tech, 2008 had 40 patients in total, in two groups 9-12 years and 19-22 years.  
+\item  For some studies (eg. 2017, Ritgers et al. Front. Aging Neurosci) it was not possible to calculate the Hegdes'G variance and were not include in some specific meta-regressions.  
+\item Studies with \textit{Mixed etiology} were excluded, due to a non representative low number (n=3).
 \item  Zheng et al. Sci Rep, 2017 this variables change; Con rangeLow	Con rangeHigh. Why? I didn't find them on the orignal paper.  
 \end{enumerate}  
 
@@ -70,9 +102,10 @@ We performed a multi-level meta-analytic model, over our multiple effect size es
 We can account for the correlation in the true effects by adding a random effect to the model at the level corresponding to the grouping variable.  
 The dataset contains the result from 54 studies, each comparing different measurements between patients and controls. The diference of between groups was quantified in terms of Hedges'G and Cohen's D.
 
-\scriptsize
 
 ## Total included studies  
+A total of **64** unique studies were included (19 acquires, 42 congenital and 3 mixed etiologies).
+\scriptsize
 ```{r datos, echo=FALSE, size = 'scriptsize'}
 # set working directory
 setwd("~/git_here/MetaHearingLoss/")
@@ -82,9 +115,6 @@ source("meta_functions.R")
 # table size \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, and \Huge
 # Upload database
 meta <- read.csv("meta_sideDeaf_full.csv")
-
-# REMOVE mixed Etiology
-meta <- meta[meta$Etiology!="mixed",]
 
 # Source of studies, "author + year"
 meta$Source <- paste0(meta$year,", ",meta$study)
@@ -108,9 +138,6 @@ meta$varDe <- varDe(meta$Number.Hearing.loss, meta$Number.Control, meta$cohenD)
 # Cohen's D Variance
 meta$varG <- varDe(meta$Number.Hearing.loss, meta$Number.Control, meta$hedgesG)
 
-# REMUVE NA values from Hedges'G
-meta <- meta[!is.na(meta$hedgesG),]
-
 # odds ratio
 #meta$or <- odds_ratio(d = meta$Cohen.s.d)
 meta$Big.area <- as.character(meta$Big.area)
@@ -124,19 +151,19 @@ meta$Big.area <- as.factor(meta$Big.area)
 # Unique studies
 studies <- meta[,c("study","year","Etiology","Side.deaf","Severeity","Number.Hearing.loss",
                    "HL.Male","HL.Female","HL.age","HL.Age.sd","SIGN","Number.Control","Con.Male",
-                   "Con.Female","Con.Age","Con.Age.sd","MRI.Tesla", "Source","Avg.dB.HL.mean")]
-studies <- studies[!duplicated(studies),]
+                   "Con.Female","Con.Age","Con.Age.sd","MRI.Tesla", "Source","Avg.dB.HL.mean","hedgesG")]
+studies <- studies[!duplicated(studies$Source),]
 
 # I excluded Xia et al. Chin J Rad, 2008 because I don't understand chinese and it appears to be the same data as Xia et al. Chin J Med Img Tech, 2008
     studies <- studies[!studies$Source=="2008, Xia et al. Chin J Rad",]
 # Kim et al. Hear Res 2014 used two groups prelingual deaf and post lingual deaf, used the average for the main table.
     indx <- which(studies$Source=="2014, Kim et al. Hear Res")
 # Number.Hearing.loss - HL.Male - HL.Female
-    studies <- rbind(studies,c(studies[indx[1],1:5],colSums(studies[indx,6:8]), apply(studies[indx,9:10],2,mean), studies[indx[1],11:19]))
+    studies <- rbind(studies,c(studies[indx[1],1:5],colSums(studies[indx,6:8]), apply(studies[indx,9:10],2,mean), studies[indx[1],11:20]))
     studies <- studies[-indx,]
 # Xia et al. Chin J Med Img Tech, 2008 had 40 patients in total two groups 9-12 years and 19-22 years
     indx <- which(studies$Source=="2008, Xia et al. Chin J Med Img Tech")
-    studies <- rbind(studies,c(studies[indx[1],1:5],colSums(studies[indx,6:8]),studies[indx[1],9:19]))
+    studies <- rbind(studies,c(studies[indx[1],1:5],colSums(studies[indx,6:8]),studies[indx[1],9:20]))
     studies <- studies[-indx,]
 # Zheng et al. Sci Rep, 2017 this variables change, why? Con rangeLow	Con rangeHigh, i didn't find them on the orignal paper
 
@@ -168,10 +195,14 @@ print.data <- function(include.studies, Title) {
   N.inc <- length(unique(include.studies$Source))
   obj <- pander(Total,caption = paste(Title, N.inc),split.table = Inf, graph.fontsize=3)
 }
+
+rownames(include.studies) <- c()
 # All studies
 pander(print.data(include.studies, 'Total unique studies'))
 pander(print.data(include.studies[include.studies$Etiology=='acquired',], 'Acquired studies'))
 pander(print.data(include.studies[include.studies$Etiology=='congenital',], 'Congenital studies'))
+pander(print.data(include.studies[include.studies$Etiology=='mixed',], 'Mixed studies'))
+
 
 # --------------------------------------------------- #
 # TABLE 2. ALL INCLUDED STUDIES 
@@ -183,11 +214,16 @@ for (i in include.studies$Source) {
   include.studies$all.techniques[include.studies$Source==i] <- paste(tech, collapse = ", ")
   include.studies$all.measures[include.studies$Source==i] <- paste(measure, collapse = ", ")
   }
-# Rownames
-rownames(include.studies) <- as.character(1:dim(include.studies)[1])
+
+# --------------------------------------------------- #
+# EXCLUSIONS
+# REMUVE NA values from Hedges'G
+meta <- meta[!is.na(meta$hedgesG),]
+# REMOVE mixed Etiology
+meta <- meta[meta$Etiology!="mixed",]
 ```
 
-# Table of included studies (Figure 1.A)  
+# Table of included studies  
   
 \footnotesize
 
@@ -196,13 +232,22 @@ rownames(include.studies) <- as.character(1:dim(include.studies)[1])
 #panderOptions('table.alignment.default', c('left',rep('center',8)))
 #pander(include.studies[,1:9],caption = "Included studies",split.table = Inf, graph.fontsize=3)
 
-# TABLE: Studies with incomplete information
-panderOptions('table.alignment.default', 'left')
-pander(include.studies[!complete.cases(include.studies),c(1,10:12)],caption = "Studies with incomplete information (NA)",split.table = Inf, graph.fontsize=6)
+# Table: studies with incomplete cases
+# pander(include.studies[!complete.cases(include.studies),c("Source", "MRI Tesla", "all.techniques", "all.measures")],caption = "Studies with incomplete cases (NA)",split.table = Inf, graph.fontsize=6)
 
+# TABLE: Studies without Hedges'G
+panderOptions('table.alignment.default', 'left')
+noHedges <- studies[is.na(studies$hedgesG),c("Source", "Etiology", "Number.Control")]
+rownames(noHedges) <- 1:7
+pander(noHedges,caption = "Studies without Hedges'G (n=7). These studies do not have control population (NA)",split.table = Inf, graph.fontsize=6)
+
+# Included studies: WITH Hedges'G
+noHedges <- include.studies[!include.studies$Source %in% noHedges$Source, c("Source", "Etiology", "all.techniques","all.measures")]
+rownames(noHedges) <- 1:dim(noHedges)[1]
+pander(noHedges,caption = "Studies with Hedges'G (n=57, mixed etiology=3)",split.table = Inf, graph.fontsize=6)
 
 # Table 2.2
-pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "Included studies",split.table = Inf, graph.fontsize=6)
+# pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "Included studies",split.table = Inf, graph.fontsize=6)
 
 # kable(include.studies[,1:9], format = "latex", caption = "Table of include studies", booktabs = T, linesep = "") %>%
 #   kable_styling(full_width = TRUE,font_size = 7 ) # %>%
@@ -412,15 +457,15 @@ GM <- meta.side[meta.side$matter=="GM",]
 grid.arrange(
   # Gray matter vs age
     ggplot(data = GM) + 
-      geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology, shape=Side)) +
-      geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+      geom_point(mapping = aes(x = HL.age, y = cohenD, size=N.total, alpha=0.4, color=Etiology, shape=Side)) +
+      geom_smooth(mapping = aes(x = HL.age, y = cohenD), method = lm, color="gray45") +
       ggtitle("All GM MRI measures vs Age") +
       labs(y='Hedge\'s G',x='Age') +
       scale_y_continuous(limits = c(-6, 3)),
 # White matter vs age
     ggplot(data = WM) + 
-      geom_point(mapping = aes(x = HL.age, y = hedgesG, size=N.total, alpha=0.4, color=Etiology, shape=Side)) +
-      geom_smooth(mapping = aes(x = HL.age, y = hedgesG), method = lm, color="gray45") +
+      geom_point(mapping = aes(x = HL.age, y = cohenD, size=N.total, alpha=0.4, color=Etiology, shape=Side)) +
+      geom_smooth(mapping = aes(x = HL.age, y = cohenD), method = lm, color="gray45") +
       ggtitle("All WM MRI measures vs Age") +
       labs(y='Hedge\'s G',x='Age') +
       scale_y_continuous(limits = c(-6, 3)),
