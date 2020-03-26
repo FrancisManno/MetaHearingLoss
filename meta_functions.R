@@ -48,12 +48,12 @@ lollipop <- function(Table, Title, Ylim, Order=TRUE, Color="royalblue3") {
 
 # ----------------------------------------------------------------------------------- #
 #### Bar graph from frequency table  #### 
-bargraph <- function(Table,Title,Color="royalblue3"){
+bargraph <- function(Table,Title,Color="royalblue3", Lab=1){
   require(extrafont)
   require(scales)
   par(family="Tahoma")
   Table <- Table[order(Table,decreasing = FALSE)]
-  barplot(Table,horiz = TRUE,las=2,main=Title,space = 0.1,col = alpha(Color,0.6),border = Color,lwd=1)
+  barplot(Table,horiz = TRUE,las=2,main=Title,space = 0.1,col = alpha(Color,0.6),border = Color,lwd=1, cex.names=Lab)
 }
 
 # ----------------------------------------------------------------------------------- #
@@ -261,21 +261,25 @@ varDe <- function(n1, n2, d){
 
 # ----------------------------------------------------------------------------------- #
 #### Prints the meta regression model estimates   #### 
-print.reml <- function(REML, Title) {
-      Tau2 <- round(REML$tau2,2)
-      Tau <- round(sqrt(Tau2),2)
-      K <- REML$k
-      S <- round(REML$se.tau2,2)
-      I <- round(REML$I2,2)
-      H <- round(REML$H2,2)
-      QE <- round(REML$QE,2)
-      QE.p <- REML$QEp
-      QM <- round(REML$QM,2)
-      QM.df <- REML$m
-      QM.p <- REML$QMp
-      QE.df <- K-QM.df
-      Mytable <- rbind(paste("\nMixed-effect model:","\nk=", K, ": tau^2=", Tau2, "(SE=", S, ") I^2=", I, "%, H^2=", H,"\n"),
-                        paste("Residual heterogeneity: QE(df=", QE.df, ")=", QE, ", p.val=", QE.p,"\n"),
-                        paste("Test of moderators (big areas): QM(df=", QM.df, ")=", QM, "p.val=", QM.p, "\n")  )
-      pander(Mytable, Title)
+kable.reml <- function(REML, Title) {
+  Tau2 <- round(REML$tau2,2)
+  Tau <- round(sqrt(Tau2),2)
+  K <- REML$k
+  S <- round(REML$se.tau2,2)
+  I <- round(REML$I2,2)
+  H <- round(REML$H2,2)
+  QE <- round(REML$QE,2)
+  QE.p <- REML$QEp
+  QM <- round(REML$QM,2)
+  QM.df <- REML$m
+  QM.p <- REML$QMp
+  QE.df <- K-QM.df
+  Mytable <- cbind(c("Mixed-effect model:", "Residual heterogeneity:", "Test of moderators (big areas):"),
+          c(paste("k=", K, ": tau^2=", Tau2, "(SE=", S, ") I^2=", I, "%, H^2=", H),
+            paste("QE(df=", QE.df, ")=", QE, ", p.val=", QE.p),
+            paste("QM(df=", QM.df, ")=", QM, "p.val=", QM.p)))
+  colnames(Mytable) <- c("Test", "Estimates")
+  print(kable(Mytable, "latex", booktabs = T,row.names = FALSE, caption = Title) %>%
+          kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+  
 }

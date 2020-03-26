@@ -66,7 +66,69 @@ Email: Francis.Manno@Sydney.edu.au
 \newpage
 
 # Methods  
-## Eligibility Criteria  
+## Literature research  
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\item Literature Search Methodology (eFigure PRISMA)
+  \begin{enumerate}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \item PubMed searches were performed to acquire the requisite background information for this review. The searches had the purpose of identifying all sources concerning structural MRI assessments of unilateral or bilateral hearing loss. All studies must have utilized MRI as a structural assessment for hearing loss.  
+  \item Search Terminology: \textit{"Unilateral hearing loss OR single-sided deafness, "Bilateral hearing loss OR deafness", "AND MRI OR magnetic resonance imaging"}  
+  \end{enumerate}
+\item First Search Oct/Nov 2012
+\begin{enumerate}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+    \item A literature search in PubMed using MeSH and truncated (wildcard) terms was performed for studies pertaining to “unilateral hearing loss” or “bilateral hearing loss on Wed October 10, 2012 through Thurs November 1, 2012. The literature search returned precisely 3,057 results. All abstracts returned were read for descriptions of congenital unilateral/bilateral hearing loss using MRI. Approximately, 905 studies meet the following inclusion criteria. These studies were surveyed to ascertain whether they were relevant for inclusion based on the ‘Review inclusion criteria.’
+    \item The primary inclusion and exclusion criteria were predetermined by following recommendations on meta-analysis (Sutton, et al., 2000)
+\end{enumerate}
+\item Inclusion criteria
+\begin{enumerate}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+    \item Structural MRI study of bilateral or unilateral hearing loss
+    \item Study had at least one cohort of participants whom had congenital unilateral/bilateral hearing loss
+    \item The study, with a cohort of hearing impaired participants, had an adequate hearing control
+    \item The normal hearing controls were sufficiently matched to the hearing impaired cohort (i.e age, gender, education, etc.)
+    \item An experiment comparing the two cohorts was performed consisting of, but not limited to, MRI structural assessment
+\end{enumerate}
+\item Exclusion criteria
+\begin{enumerate}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+    \item All studies were first included in the review and then given an asterisk if deemed inappropriate for inclusion. 
+    \item Case studies (i.e., reports with only one patient)
+    \item Manuscripts with insufficient power of replication (i.e., manuscript with 2 patients)
+    \item Manuscripts with an inadequate or absent normal hearing control cohort (i.e., no control cohort was reported) – indicated in table.
+    \item Normal hearing control cohort lacked matching demographic characteristics (i.e. the study had a group of hearing loss pediatric children and the normal hearing control group was adults)
+    \item Manuscripts without an experiment comparing the hearing loss and normal cohort (i.e., bilateral hearing loss was not compared to hearing controls).
+\end{enumerate}
+\item Second Search June/July 2018
+  \begin{enumerate}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \item Searches from first search and second search were combined along with personal correspondences of articles from JTR.
+  \item Pubmed; (deafness OR "hearing loss" OR "bilateral hearing loss" OR “unilateral hearing loss” OR “conductive hearing loss” OR “sensorineural hearing Loss”) AND ("magnetic resonance imaging" OR MRI OR DTI OR "diffusion tensor imaging") NOT (Review[Filter] OR Editorial[Filter] OR Comment[Filter])
+  \item Returned 4,179 articles. Articles were checked again throughout June/July 2018. Final article list was checked through Scopus.
+  \item All references we checked at date indicated in table.
+  \item Approximately 911 studies meet inclusion criteria
+  \item Approximately 178 studies were screened from both periods and invited 
+  \item Approximately 118 were excluded based on exclusion criteria or not pertaining to inclusion criteria
+  \item A total of 51 studies were analyzed 
+  \end{enumerate}
+\item Controls 
+\item Our requirements for duplicated studies were studies which used the identical participants but had different methodology, participants age was identical, or it was stated participants were used by authors in two studies
+\item Only included original statistics here from the studies. All derived effect sizes were from study information. Asymmetry statistics were created if a study included a left and a right side for an identical ROI. Statistics from our analysis could be derived from, example asymmetry as indicated above.
+\item Asymmetry if included was converted to: only for asymmetry (check asymmetry) (L - R) /[(L+R)/2], where positive result = LEFT, negative result = RIGHT
+\item If studies included acquired and congenital we only used congenital metrics.
+\end{itemize}
+
+### Figure SI.1 Flow diagram
+![Flowchart of data-acquisition* All available bilateral/unilateral studies were analyzed.](S1.1_flow_diagram.png)
+
+## Eligibility Criteria for the meta-regression  
 We included peer-review publications in English, involving patients with bilateral congenital and mixed hearing loss and controls with structural Magnetic Resonance Imaging. We included cross-sectional studies with control groups, that investigated the structural relation between MRI changes and the hearing loss. The most common MRI measures were **volume, FA, VBM and thickness.** Each measure was assignated to a specific ROI and to a big brain area. (eg. HG and superior temporal lobe belong to **temporal lobe**).
 A total of 59 studies were included, 6 of them contained incomplete information. A total of 2778 patients and 4214 controls.  
 Notes for inclusion:  
@@ -79,32 +141,9 @@ Notes for inclusion:
 \item  Zheng et al. Sci Rep, 2017 this variables change; Con rangeLow	Con rangeHigh. Why? I didn't find them on the orignal paper.  
 \end{enumerate}  
 
-Effect size direction was directly include in the Cohen's D value by mutipliying by -1 if the effect was decrease and by 1 if it was none of increased. Forests plots were generated form the meta-regression with subgroups left and right. 
-We measure a general regression for white and gray mater by Etiology (congenital and acquired) with subgroups (left and right).  
-  
-Effects were summarized across studies using the generic inverse-variance weighting method with DerSimonian and Laird random effects. Studies were weighted by $1/SE²$ (where SE is the standard error). For the effect size we used Hedges'G, wich takes into account the sample size.
 
-$$Hedges'G=\frac{X_1 - X_2}{\sqrt{\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}}}$$
-
-
-
-### Assumptions:  
-\begin{enumerate}  
-\item We assume that the calculation of the cohen's D is correct.  
-\item We assume that the direction of the effect is correct.  
-\item Variance was estimated using the cohen's D and sample size of each study. Our estimated variance was used for all meta-regressions, therefore we could have and additional bias in-between studies variance and heterogeneity calculations. We should have calculated the effect size from the mean and standard deviation from each study. Variance was estimated using the following formula:  
-$$Variance=\frac{n1+n2}{n1\times n2}+\frac{Hedges'G^2}{2\times(n1+n2-2)}$$  
-\end{enumerate}  
-  
-## Estimatimation of heterogeneity per model  
-We estimated heterogeneity in results using the $\tau$ statistic, which represents the standard deviation in the meta-regression models, we used the heterogeneity test $x2$ and $I2$.   
-We performed a multi-level meta-analytic model, over our multiple effect size estimates nested withing variables: Etiology, side and Big brain area. We expected that the underlying true effects are more similar for the same level of the grouping variables than thrue effects arising from different levels.  
-We can account for the correlation in the true effects by adding a random effect to the model at the level corresponding to the grouping variable.  
-The dataset contains the result from 54 studies, each comparing different measurements between patients and controls. The diference of between groups was quantified in terms of Hedges'G and Cohen's D.
-
-
-## Total included studies  
-A total of **64** unique studies were included (19 acquires, 42 congenital and 3 mixed etiologies).
+## Tables of included studies  
+A total of **64** unique bilateral studies were included (19 acquires, 42 congenital and 3 mixed etiologies).
 \scriptsize
 ```{r datos, echo=FALSE, size = 'scriptsize'}
 # set working directory
@@ -156,6 +195,7 @@ studies <- studies[!duplicated(studies$Source),]
 
 # I excluded Xia et al. Chin J Rad, 2008 because I don't understand chinese and it appears to be the same data as Xia et al. Chin J Med Img Tech, 2008
     studies <- studies[!studies$Source=="2008, Xia et al. Chin J Rad",]
+    meta <- meta[!meta$Source=="2008, Xia et al. Chin J Rad",]
 # Kim et al. Hear Res 2014 used two groups prelingual deaf and post lingual deaf, used the average for the main table.
     indx <- which(studies$Source=="2014, Kim et al. Hear Res")
 # Number.Hearing.loss - HL.Male - HL.Female
@@ -215,15 +255,17 @@ for (i in include.studies$Source) {
   include.studies$all.measures[include.studies$Source==i] <- paste(measure, collapse = ", ")
   }
 
+# Approximate number of data points
+#sum(apply(meta[,c(12,14,15:20,23:24,32:36,42,55, 58:67, 70,71, 76)], 2, function(x) length(which(!is.na(x)))) )
+
 # --------------------------------------------------- #
+ref <- meta[!duplicated(meta$Source),c("authors", "title", "publication", "doi", "email")]
 # EXCLUSIONS
 # REMUVE NA values from Hedges'G
 meta <- meta[!is.na(meta$hedgesG),]
 # REMOVE mixed Etiology
 meta <- meta[meta$Etiology!="mixed",]
 ```
-
-# Table of included studies  
   
 \footnotesize
 
@@ -243,24 +285,96 @@ pander(noHedges,caption = "Studies without Hedges'G (n=7). These studies do not 
 
 # Included studies: WITH Hedges'G
 noHedges <- include.studies[!include.studies$Source %in% noHedges$Source, c("Source", "Etiology", "all.techniques","all.measures")]
+noHedges <- noHedges[order(noHedges$all.techniques, noHedges$Source),]
 rownames(noHedges) <- 1:dim(noHedges)[1]
 pander(noHedges,caption = "Studies with Hedges'G (n=57, mixed etiology=3)",split.table = Inf, graph.fontsize=6)
 
-# Table 2.2
-# pander(include.studies[complete.cases(include.studies),c(1,10:12)],caption = "Included studies",split.table = Inf, graph.fontsize=6)
-
-# kable(include.studies[,1:9], format = "latex", caption = "Table of include studies", booktabs = T, linesep = "") %>%
-#   kable_styling(full_width = TRUE,font_size = 7 ) # %>%
-#   # add_header_above(c("-" = 4, " x 10-4" = 3, " x 10-3" = 3)) %>%
-#   # add_header_above(c("Tractos", "Fraccion Anisotropica" = 3, "Difusividad Radial" = 3, "Difusividad Axial"=3), bold = T) %>%
-#   # add_footnote("Significancia p<0.05", notation = "symbol")
 ```    
   
-
 \normalsize  
   
-# Relation between hearing loss (dB)  and age (Figure 2.D)  
-```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=3,fig.width=7}
+## Effect size calculation
+Effect size direction was directly include in the Cohen's D value by mutipliying by -1 if the effect was decrease and by 1 if it was none of increased.
+The value of $Cohen's D$  $r_{Y1}$, was calculated using the means and standard deviations of two groups ($M_1$=treatment and $M_2$=control):  
+$$Cohen's\ D = \frac{M_1 - M_2 }{S_{pooled}}$$ where $$S_{pooled}=\sqrt\frac{(n_1-1)\times s_1^2+ (n_2-1)\times s_2^2}{n_1+n_2-2}$$ 
+and the effect-size correlation is:
+$$r_{Y1}=\frac{d}{\sqrt{d^2+4}}$$
+
+We calculate the value of Cohen's d and the effect size correlation, $r_{Y1}$, using the t test value for a between subjects $t-test$ and the degrees of freedom, the following formula was used:  
+$$Cohen's\ D = \frac{2t}{\sqrt{df}}\ and\ r_{Y1} = \sqrt{\frac{t^2}{t^2 + df}}$$  
+  
+Effects were summarized across studies using the generic inverse-variance weighting method with DerSimonian and Laird random effects. Studies were weighted by $1/SE²$ (where SE is the standard error). For the effect size we used Hedges'G, wich takes into account the sample size.
+
+$$Hedges'G=\frac{X_1 - X_2}{\sqrt{\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}}}$$
+
+Finally, the variance was estimated using the cohen's D and sample size of each study. Our estimated variance was used for all meta-regressions, therefore we could have and additional bias in-between studies variance and heterogeneity calculations. We should have calculated the effect size from the mean and standard deviation from each study. Variance was estimated using the following formula:  
+$$Variance=\frac{n1+n2}{n1\times n2}+\frac{Hedges'G^2}{2\times(n1+n2-2)}$$  
+  
+## Estimatimation of heterogeneity per model  
+We estimated heterogeneity in results using the $\tau$ statistic, which represents the standard deviation in the meta-regression models, we used the heterogeneity test $x2$ and $I2$.   
+We performed a multi-level meta-analytic model, over our multiple effect size estimates nested withing variables: Etiology, side and Big brain area. We expected that the underlying true effects are more similar for the same level of the grouping variables than thrue effects arising from different levels.  
+We can account for the correlation in the true effects by adding a random effect to the model at the level corresponding to the grouping variable.  
+The dataset contains the result from 54 studies, each comparing different measurements between patients and controls. The diference of between groups was quantified in terms of Hedges'G and Cohen's D.
+  
+## References (64 bilateral studies)  
+
+\footnotesize  
+
+```{r ref, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+rownames(ref) <- NULL
+ref <- paste0(apply(ref, 1 , paste , collapse = ", " ))
+print(ref)
+```  
+
+## Unilateral hearing loss (total n=8)
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\item	VBM studies
+\begin{enumerate}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\item	Fan et al. Otol Neurotol. 2015 Dec;36(10):1622-7. (Unilateral SNHL adult mixed cause) –VBM –SPM
+\item	Yang et al. Hear Res. 2014 Oct;316:37-43. (Right unilateral SHNL adult) –SPM – VBM
+\item	Wang et al. Sci Rep. 2016 May 13;6:25811.(Adult acquired unilateral) SPM -VBM
+\end{enumerate}
+\item	DTI
+\begin{enumerate}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\item	Wu et al. AJNR Am J Neuroradiol. 2009 Oct;30(9):1773-7. (Congenital Unilateral deaf children) - DTI-Studio
+\item	Lin et al. J Magn Reson Imaging. 2008 Sep;28(3):598-603. (Bilateral and unilateral SNHL Adult) - DTI-Studio
+\item	Rachakonda et al. Front Syst Neurosci. 2014 May 26;8:87. (Unilateral left and right, adolescent) – Not indicated
+\item	Wu et al. Audiol Neurootol. 2009;14(4):248-53. (Unilateral mixed left/right SNHL mixed congenital/unknown adult)-DTI Studio
+\item	Vos et al. Hear Res. 2015 May;323:1-8. (Unilateral mixed left and right SNHL adult) – DTI Tractography - ExploreDTI
+\end{enumerate}
+\end{itemize}
+
+\scriptsize
+## Signed differential mapping (SDM) table
+```{r sdm, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
+sdm <- read.csv(file = "SDM_table.csv")
+rownames(sdm) <- NULL
+pandoc.header(paste("SDM: congenital"), level = 3)
+  print(kable(sdm[sdm$group=="congenital",1:6][1:59,], "latex", booktabs = T,row.names = FALSE) %>%
+  kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+  
+  print(kable(sdm[sdm$group=="congenital",1:6][60:81,], "latex", booktabs = T,row.names = FALSE) %>%
+  kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+  
+for (i in c("acquired", "pediatric", "adult", "AgedAdult","GM", "WM")) {
+  pandoc.header(paste("SDM:",i), level = 3)
+  print(kable(sdm[sdm$group==i,1:6], "latex", booktabs = T,row.names = FALSE) %>%
+  kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+}
+```
+    
+\normalsize  
+
+# Studies characteristics
+## Relation between hearing loss (dB)  and age (Figure 2.D)  
+```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=5,fig.width=7}
+studies <- studies[studies$Etiology!="mixed",]
 gg=ggplot(studies, mapping =aes(x=HL.age, y=Avg.dB.HL.mean)) +
   geom_point(mapping = aes(x = HL.age, y = Avg.dB.HL.mean, color=Etiology, size=Number.Hearing.loss), alpha = 50 / 100, position = "jitter") +
   geom_smooth(mapping = aes(x = HL.age, y = Avg.dB.HL.mean), method = lm, color="gray45") +
@@ -272,29 +386,35 @@ ggMarginal(gg, type="histogram")
 ```  
   
   
-# Studies characteristics (Figure 2.E, 2.F)  
-```{r lollip, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3, fig.width=7}
+## Studies characteristics (Figure 2.E, 2.F)  
+```{r lollip1, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4, fig.width=8}
 # Lollipop graphs
 grid.arrange(
 lollipop(table(meta$measure),"MRI Measures",c(0,300)),
 lollipop(table(meta$Big.area)[order(table(meta$Big.area),decreasing = TRUE)][1:12],"Main Brain Areas\n frecuency>5",c(0,300))
 , ncol=2, nrow = 1)
+```
+  
+```{r lollip2, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, fig.width=8}
 lollipop(table(meta$ROI)[order(table(meta$ROI),decreasing = TRUE)][1:35],"Region of interest: frecuency>5",c(0,80))
+```
+  
+```{r bar1, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3, fig.width=10}
 par(mfrow=c(1,2))
 # Bar graph of frecuency
-bargraph(table(meta$Side)[order(table(meta$Side),decreasing = FALSE)][2:5],"Side of the Lesion")
-bargraph(table(meta$matter)[order(table(meta$matter),decreasing = FALSE)], "Area of Analysis")
-
+bargraph(table(meta$Side)[order(table(meta$Side),decreasing = FALSE)][2:5],"Side of the Lesion", Lab=0.75)
+bargraph(table(meta$matter)[order(table(meta$matter),decreasing = FALSE)], "Area of Analysis", Lab=0.75)
+```
+  
+```{r bar2, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4, fig.width=10}
 # Etiology by SEVERITY
 par(mfrow=c(1,2))
 Col <- c("#F8766D", "#00BFC4")
-barplot(table(studies$Etiology, studies$Severeity)[1:2,], main = "Fig.2.E - Severity", beside = FALSE, col=alpha(Col,0.6), border = Col, xlab='Number of studies', horiz = TRUE, las=2)
+barplot(table(studies$Etiology, studies$Severeity)[1:2,], main = "Fig.2.E - Severity", beside = FALSE, col=alpha(Col,0.6), border = Col, xlab='Number of studies', horiz = TRUE, las=2, cex.names=0.75)
 
 # Etiology by EFFECT DIRECTION
-barplot(prop.table(table(meta$Etiology, meta$effect), 1)[,3:5],  main = "Fig.2.F - Effect direction", beside = TRUE, col=alpha(Col,0.6), xlab='Relative percentage', border = Col, horiz = TRUE, las=2)
+barplot(prop.table(table(meta$Etiology, meta$effect), 1)[,3:5],  main = "Fig.2.F - Effect direction", beside = TRUE, col=alpha(Col,0.6), xlab='Relative percentage', border = Col, horiz = TRUE, las=2, cex.names=0.75)
 # add legend
-
-
 ```
   
 
@@ -343,15 +463,9 @@ pander(table(meta$matter,meta$Side)[c(2,5),],caption = "Matter vs Side")
 # Indexing only gray and white matter
 G <- which(rownames(tablas)=="GM")
 W <- which(rownames(tablas)=="WM")
-```
 
-\normalsize
-
-## Brain structure (GM, WM) and side  
-
-\footnotesize
-
-```{r tab2,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=4}
+# ------------------------------------------------------
+pandoc.header("Brain structure (GM, WM) and side",3)
 # Table: Matter vs Side 
 barplot(table(meta$matter,meta$Side)[c(2,5),], beside = TRUE, main="Matter vs Side", col = c("gray35", "gray85"), border = c("gray35", "gray85"))
 legend(12,160,c("GM", "WM") ,fill = c("gray35", "gray85"), border = c("gray35", "gray85"), bty = 'n' )
@@ -369,21 +483,9 @@ Indx <- order(apply(as.matrix(freq.table),1,sum),decreasing = TRUE)
 ```
 
 \normalsize
-
-## Brain structure (GM, WM) by MRI measure (volume) and ROI  
-```{r roi, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2, fig.width=7}
-grid.arrange(
-# Frecuency of GM by Volume in all ROI
-lollipop(table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])[table(meta$ROI[meta$matter=="GM" & meta$measure=="volume"])>4],"Gray Matter volume ROIs: >5 studies", Color="#008000", Ylim = c(0,20)),
-
-# Frecuency of WM by FA in all ROI
-lollipop(table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])[table(meta$ROI[meta$matter=="WM" & meta$measure=="FA"])>2],"White matter FA ROIs: >5 studies", Color="#000080", Ylim = c(0,20)),
-nrow=1, ncol = 2)
-```
-
 \newpage
 
-# Studies characteristics (Figure 2.A, 2.B): Brain structure (GM, WM) by MRI measure (volume and FA) 
+## Studies characteristics (Figure 2.A, 2.B): Brain structure (GM, WM) by MRI measure (volume and FA) 
 ```{r fig1a, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10,fig.height=2}
 # FRECUENCY BY MRI MEASURE
 tablas <- table(meta$matter,meta$measure)
@@ -435,7 +537,7 @@ meta.GWm$ROI <- factor(meta.GWm$ROI,levels = rev(noms))
 meta.GWm <- meta.GWm[!is.na(meta.GWm$class),]
 ```
 
-# MRI measures by ROI (Figure 2.C)
+## MRI measures by ROI (Figure 2.C)
 ```{r fig1a-stack, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8,fig.height=4}
 # PLot the stacked plto  600 x 250 px
 ggplot(meta.GWm, aes(ROI)) + 
@@ -472,7 +574,7 @@ grid.arrange(
 ncol=1, nrow = 2)
 ```
   
-# Gray matter relation with Age by volume (Figures 3.A and 3.B)
+## Gray matter relation with Age by volume (Figures 3.A and 3.B)
 ```{r corr.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=5, fig.width=9}
 # GRAY AND WHITE MATTER BY SIDE
 WM.R <- WM[WM$Side=="right",]
@@ -535,7 +637,7 @@ ncol=2, nrow = 2)
 ```
   
   
-# White matter relation with Age by volume and FA (Figures 3.C, 3.D and 3.F)
+## White matter relation with Age by volume and FA (Figures 3.C, 3.D and 3.F)
 ```{r corr.FA,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=7.5, fig.width=9}
 # ----------------------------------------------------------------------------
 # WHITE MATTER, LEFT & RIGHT
@@ -668,8 +770,9 @@ metareg.plot(GM.vol.L, 'GM vol left and Age')
 ```  
   
 \newpage
+# Meta-regression  
   
-# Meta-regression: Variables by Etiology, Brain matter and MRI measure   
+## Included variables by Etiology, Brain matter and MRI measure   
 ```{r Meta.all,  echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.height=7.5, fig.width=7}
 # Dropin' levels
 meta.side$Side <- droplevels(meta.side$Side)
@@ -722,12 +825,10 @@ for (i in c("WM-volume", "GM-FA", "WM-FA", "GM+WM-volume")) {
   legend(5,70,levels(meta.mri$Side) ,fill = Col, border = ColB, bty = 'n')
 }
 ```
-  
-  
-## Gray Matter Volume: Random effects model no intercept covariated by Big area  
-  
-\scriptsize 
 
+\newpage
+## Acquired - Meta-regressions of Gray Matter Volume  
+Random effects model no intercept covariated by Big area  
 ```{r congenital.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
 # CONGENITAL, GRAY MATTER AND VOLUME sliced data
 meta.sliced <- meta.side[meta.side$measure=="volume" & meta.side$matter=="GM" & meta.side$Etiology=="congenital",]
@@ -737,12 +838,15 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
-# print model estimates
-print.reml(result.rd, "Congenital - Gray Matter Volume")
+
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-pander(df)
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%
+          kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+
+# print model estimates
+kable.reml(result.rd, "Congenital - Gray Matter Volume")
 
 # Forest plot
 sub.forest(meta.reml,Title = "Congenital - Gray Matter Volume")
@@ -759,8 +863,8 @@ pvals <- data.frame(id=rownames(df), GM.vol.C=df$pval)
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
 plot.meta(result.rd,Title = "Congenital - GM Volume")
 ```
-
-## ACQUIRED - Meta-regressions of Gray Matter by Volume
+  
+## Acquired - Meta-regressions of Gray Matter by Volume  
 Random effects model no intercept covariated by Big area  
 ```{r acquire.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=10}
 # GRAY MATTER AND VOLUME sliced data
@@ -773,11 +877,12 @@ meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
 # print model estimates
-print.reml(result.rd, "Acquired - Gray Matter Volume")
+kable.reml(result.rd, "Acquired - Gray Matter Volume")
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ))
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-pander(df)
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%
+          kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
 
 # Forest plot
 sub.forest(meta.reml,Title = "Acquired - Gray Matter Volume")
@@ -795,8 +900,8 @@ pvals <- merge(pvals,  data.frame(id=rownames(df), GM.vol.A=df$pval), by="id",al
 # Heterogeneity plots: Funnel, Radial (Galbraith), Baujat and Quantiles Q-Q
 plot.meta(result.rd,Title = "Acquired - GM Volume")
 ```
-
-## CONGENITAL - White Matter by VOLUME  
+  
+## Congenital - White Matter by VOLUME  
 Random effects model no intercept covariated by Big area  
 ```{r f3.WMvol-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
 # WHITE MATTER AND VOLUME sliced data
@@ -808,11 +913,11 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
 # print model estimates
-print.reml(result.rd, "Congenital White Matter Volume")
+kable.reml(result.rd, "Congenital White Matter Volume")
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-pander(df)
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.vol.C=df$HedgeG), by="id",all = T)
@@ -827,9 +932,9 @@ sub.forest(meta.reml,Title = "Congenital White Matter Volume")
 plot.meta(result.rd,Title = "Congenital - WM Volume")
 ```
 
-## ACQUIRED - White Matter by VOLUME (ONLY BILATERAL)
+## Acquired - White Matter by VOLUME (ONLY BILATERAL)  
 Not enough values for the Random effects model no intercept covariated by Big area and Side (left or right)  
-
+  
 ```{r f3.WMfa-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=6}
 # WHITE MATTER AND VOLUME sliced data 
 meta.sliced <- meta[meta$measure=="volume" & meta$matter=="WM" & meta$Etiology=="acquired",]
@@ -839,12 +944,12 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="bilateral",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML", data = meta.reml)
 # print model estimates
-print.reml(result.rd, "acquired White Matter Volume")
+kable.reml(result.rd, "acquired White Matter Volume")
 
 # Table of results
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-pander(df)
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
 
 # Forest plot
 sub.forest(meta.sliced,Title = "acquired White Matter Volume")
@@ -858,7 +963,7 @@ Nothing is significant
 #plot.meta(result.rd,Title = "acquired BILATERAL \nWhite Matter Volume")
 ```
 
-## CONGENITAL - White Matter by FA fractional anisotropy  
+## Congenital - White Matter by FA fractional anisotropy  
 Random effects model no intercept covariated by Big area  
 ```{r WMfa.congenital,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
 # WHITE MATTER AND VOLUME sliced data
@@ -870,12 +975,12 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right" ,]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
 # print model estimates
-print.reml(result.rd, "Congenital White Matter FA")
+kable.reml(result.rd, "Congenital White Matter FA")
 
 # table
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-pander(df)
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.fa.C=df$HedgeG), by="id",all = T)
@@ -891,7 +996,7 @@ sub.forest(meta.reml,Title = "Congenital White Matter FA")
 plot.meta(result.rd,Title = "Congenital White Matter FA")
 ```
   
-## ACQUIRED - White Matter by FA fractional anisotropy (ONLY RIGHT)  
+## Acquired - White Matter by FA fractional anisotropy (ONLY RIGHT)  
 Random effects model no intercept covariated by Big area  
 ```{r WMfa.acquired,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=8}
 # WHITE MATTER AND VOLUME sliced data
@@ -904,12 +1009,12 @@ meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
 # print model estimates
-print.reml(result.rd, "acquired White Matter FA")
+kable.reml(result.rd, "acquired White Matter FA")
 
 # table for estimates
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,p.val=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-pander(df)
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.fa.A=df$HedgeG), by="id",all = T)
