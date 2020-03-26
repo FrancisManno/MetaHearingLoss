@@ -280,6 +280,6 @@ kable.reml <- function(REML, Title) {
             paste("QM(df=", QM.df, ")=", QM, "p.val=", QM.p)))
   colnames(Mytable) <- c("Test", "Estimates")
   print(kable(Mytable, "latex", booktabs = T,row.names = FALSE, caption = Title) %>%
-          kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+          kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position")))
   
 }

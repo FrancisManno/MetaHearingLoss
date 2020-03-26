@@ -293,7 +293,7 @@ pander(noHedges,caption = "Studies with Hedges'G (n=57, mixed etiology=3)",split
   
 \normalsize  
   
-## Effect size calculation
+## Formulas
 Effect size direction was directly include in the Cohen's D value by mutipliying by -1 if the effect was decrease and by 1 if it was none of increased.
 The value of $Cohen's D$  $r_{Y1}$, was calculated using the means and standard deviations of two groups ($M_1$=treatment and $M_2$=control):  
 $$Cohen's\ D = \frac{M_1 - M_2 }{S_{pooled}}$$ where $$S_{pooled}=\sqrt\frac{(n_1-1)\times s_1^2+ (n_2-1)\times s_2^2}{n_1+n_2-2}$$ 
@@ -864,6 +864,7 @@ pvals <- data.frame(id=rownames(df), GM.vol.C=df$pval)
 plot.meta(result.rd,Title = "Congenital - GM Volume")
 ```
   
+\newpage 
 ## Acquired - Meta-regressions of Gray Matter by Volume  
 Random effects model no intercept covariated by Big area  
 ```{r acquire.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=10}
@@ -876,13 +877,15 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
-# print model estimates
-kable.reml(result.rd, "Acquired - Gray Matter Volume")
+
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ))
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%
-          kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Acquired - Gray Matter Volume") %>%
+          kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+
+# print model estimates
+kable.reml(result.rd, "Acquired - Gray Matter Volume")
 
 # Forest plot
 sub.forest(meta.reml,Title = "Acquired - Gray Matter Volume")
@@ -901,6 +904,7 @@ pvals <- merge(pvals,  data.frame(id=rownames(df), GM.vol.A=df$pval), by="id",al
 plot.meta(result.rd,Title = "Acquired - GM Volume")
 ```
   
+\newpage
 ## Congenital - White Matter by VOLUME  
 Random effects model no intercept covariated by Big area  
 ```{r f3.WMvol-meta,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
@@ -912,12 +916,14 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
-# print model estimates
-kable.reml(result.rd, "Congenital White Matter Volume")
+
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Congenital - White Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+
+# print model estimates
+kable.reml(result.rd, "Congenital White Matter Volume")
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.vol.C=df$HedgeG), by="id",all = T)
@@ -932,6 +938,7 @@ sub.forest(meta.reml,Title = "Congenital White Matter Volume")
 plot.meta(result.rd,Title = "Congenital - WM Volume")
 ```
 
+\newpage
 ## Acquired - White Matter by VOLUME (ONLY BILATERAL)  
 Not enough values for the Random effects model no intercept covariated by Big area and Side (left or right)  
   
@@ -943,16 +950,18 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 
 meta.reml <- meta.sliced[meta.sliced$Side=="bilateral",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML", data = meta.reml)
-# print model estimates
-kable.reml(result.rd, "acquired White Matter Volume")
 
 # Table of results
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Acquired White Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+
+# print model estimates
+kable.reml(result.rd, "acquired White Matter Volume")
+
 
 # Forest plot
-sub.forest(meta.sliced,Title = "acquired White Matter Volume")
+sub.forest(meta.sliced,Title = "Acquired White Matter Volume")
 
 ```
   
@@ -963,6 +972,7 @@ Nothing is significant
 #plot.meta(result.rd,Title = "acquired BILATERAL \nWhite Matter Volume")
 ```
 
+\newpage
 ## Congenital - White Matter by FA fractional anisotropy  
 Random effects model no intercept covariated by Big area  
 ```{r WMfa.congenital,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
@@ -974,13 +984,14 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 ### fit random-effects model
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right" ,]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",data = meta.reml)
-# print model estimates
-kable.reml(result.rd, "Congenital White Matter FA")
 
 # table
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Congenital White Matter FA") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+
+# print model estimates
+kable.reml(result.rd, "Congenital White Matter FA")
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.fa.C=df$HedgeG), by="id",all = T)
@@ -996,6 +1007,7 @@ sub.forest(meta.reml,Title = "Congenital White Matter FA")
 plot.meta(result.rd,Title = "Congenital White Matter FA")
 ```
   
+\newpage
 ## Acquired - White Matter by FA fractional anisotropy (ONLY RIGHT)  
 Random effects model no intercept covariated by Big area  
 ```{r WMfa.acquired,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=8}
@@ -1008,13 +1020,15 @@ meta.sliced$big.side <- paste0(meta.sliced$Side," ",meta.sliced$Big.area)
 meta.reml <- meta.sliced[meta.sliced$Side=="left" | meta.sliced$Side=="right",]
 result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, measure = "MD",method = "REML",
                  data = meta.reml)
-# print model estimates
-kable.reml(result.rd, "acquired White Matter FA")
 
 # table for estimates
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,p.val=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Acquired White Matter FA") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+
+# print model estimates
+kable.reml(result.rd, "acquired White Matter FA")
+
 
 # Estimates
 hedgeG <- merge(hedgeG, data.frame(id=rownames(df), WM.fa.A=df$HedgeG), by="id",all = T)
