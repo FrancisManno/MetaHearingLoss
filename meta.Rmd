@@ -842,7 +842,7 @@ result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, me
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%
+print(kable(df, "latex", booktabs = T,row.names = TRUE, caption = "REM by big area- Congenital - Gray Matter Volume") %>%
           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
 
 # print model estimates
@@ -881,7 +881,7 @@ result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, me
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ))
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Acquired - Gray Matter Volume") %>%
+print(kable(df, "latex", booktabs = T,row.names = TRUE, caption = "REM by big area - Acquired - Gray Matter Volume") %>%
           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
 
 # print model estimates
@@ -920,7 +920,7 @@ result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, me
 # table for surface ploting
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Congenital - White Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = TRUE, caption = "REM by big area - Congenital - White Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
 
 # print model estimates
 kable.reml(result.rd, "Congenital White Matter Volume")
@@ -954,7 +954,7 @@ result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, me
 # Table of results
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.u, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Acquired White Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = TRUE, caption = "REM by big area - Acquired White Matter Volume") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
 
 # print model estimates
 kable.reml(result.rd, "acquired White Matter Volume")
@@ -988,7 +988,7 @@ result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, me
 # table
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub, pval=result.rd$pval, N=as.numeric(table(meta.reml$big.side) ) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Congenital White Matter FA") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = TRUE, caption = "REM by big area - Congenital White Matter FA") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
 
 # print model estimates
 kable.reml(result.rd, "Congenital White Matter FA")
@@ -1024,7 +1024,7 @@ result.rd <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(big.side)-1, me
 # table for estimates
 df <- data.frame(HedgeG=result.rd$beta,se=result.rd$se,zval=result.rd$zval,ci.lo=result.rd$ci.lb,ci.up=result.rd$ci.ub,p.val=result.rd$pval, N=as.numeric(table(meta.reml$big.side)) )
 rownames(df) <- gsub(pattern = "factor[:(:]big.side)",replacement = "",x = rownames(df))
-print(kable(df, "latex", booktabs = T,row.names = FALSE, caption = "REM by big area - Acquired White Matter FA") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
+print(kable(df, "latex", booktabs = T,row.names = TRUE, caption = "REM by big area - Acquired White Matter FA") %>%           kable_styling(latex_options = c("striped", "scale_down", "condensed","hold_position"), font_size = 6))
 
 # print model estimates
 kable.reml(result.rd, "acquired White Matter FA")
