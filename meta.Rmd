@@ -350,8 +350,16 @@ print(ref)
 \end{enumerate}
 \end{itemize}
 
-\scriptsize
-## Signed differential mapping (SDM) table
+\normalsize 
+## Signed differential mapping (SDM)  
+Seed-based d Mapping (formerly "Signed Differential Mapping"):  
+> https://www.sdmproject.com/  
+  
+1. Radua J, Mataix-Cols D. Voxel-wise meta-analysis of grey matter changes in obsessive-compulsive disorder. Br J Psychiatry. 2009; 195:393--402.  
+1. Radua J, van den Heuvel OA, Surguladze S, Mataix-Cols D. Meta-analytical comparison of voxel based morphometry studies in obsessive-compulsive disorder vs other anxiety disorders. Arch Gen Psychiatry. 2010; 67:701--711.  
+
+\scriptsize   
+### Signed differential mapping (SDM): tables    
 ```{r sdm, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
 sdm <- read.csv(file = "SDM_table.csv")
 rownames(sdm) <- NULL
@@ -371,6 +379,266 @@ for (i in c("acquired", "pediatric", "adult", "AgedAdult","GM", "WM")) {
     
 \normalsize  
 
+## Anatomic Likelihood Estimation  
+Fox PT, Lancaster JL. Mapping context and content: the BrainMap model. Nat Rev Neurosci. 2002 Apr;3(4):319-21.  
+> http://www.brainmap.org/ale/  
+> http://www.brainmap.org/scribe/  
+
+## Multi-Level Kernel Density Analysis (MKDA): Wager Methods  
+https://github.com/canlab/Canlab MKDA MetaAnalysis  
+
+### Definitions for MKDA  
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+  \item Cluster Definitions (KDA documentation of Wager's scripts)
+  \item Clusters in yellow - these are the clusters that surpass the height-corrected threshold.
+  \item Clusters in orange - these are incremental clusters that pass the most stringent extent-based threshold (p \textless{} .001) that are not within 10 mm of the clusters for the height-based threshold.
+  \item Clusters in red - these are incremental clusters that pass the medium extent-based threshold (p \textless{} .01) that are not within 10 mm of the clusters for the height-corrected and stringent extent-corrected thresholds.
+  \item Clusters in purple - these are incremental clusters that pass thelenient extent-based threshold (p \textless{} .05) that are not within10 mm of the clusters for the height-corrected, as well as the stringent and medium extent-corrected thresholds.
+\end{enumerate}  
+  
+The following cluster definitions used by Wager's scripts are briefly summarized (see SI for extended analysis). Yellow indicates clusters surpass the height-corrected threshold and orange, red and purple clusters are not within 10 mm of the clusters for the height-corrected. Further, orange indicates clusters pass the most stringent extent-based threshold (p \textless{} .001), red indicates clusters that pass the medium extent-based threshold (p \textless{} .01) and purple indicates clusters pass the lenient extent-based threshold (p \textless{} .05). The primary mKDA analyses were done for acquired and congenital separately and combined. Additional analyses are found in the SI.  
+  
+### Cluster comparisons list  
+  
+The following mKDA specific analyses were conducted. If no significant clusters were found, no image map was produced.  
+  
+\begin{enumerate}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\item Cluster: Specific ROI cluster analysis
+\item Cluster: All MNI Coordinate mapping
+\item Cluster: Increase (all increase)
+      \begin{enumerate}
+      \setlength{\itemsep}{0pt}
+      \setlength{\parskip}{0pt}
+      \item Cluster: Increase left (all left)
+          \begin{enumerate}
+          \setlength{\itemsep}{0pt}
+          \setlength{\parskip}{0pt}
+          \item Cluster: Increase left GM
+          \item Cluster: Increase left WM
+          \end{enumerate}
+      \item Cluster: Increase right (all right)
+          \begin{enumerate}
+          \setlength{\itemsep}{0pt}
+          \setlength{\parskip}{0pt}
+          \item Cluster: Increase right GM
+          \item Cluster: Increase right WM)
+          \end{enumerate}
+      \end{enumerate} 
+\item Cluster: Decrease (all decrease)
+      \begin{enumerate}
+      \setlength{\itemsep}{0pt}
+      \setlength{\parskip}{0pt}
+      \item Cluster: Decrease left (all left)
+          \begin{enumerate}
+          \setlength{\itemsep}{0pt}
+          \setlength{\parskip}{0pt}
+          \item Cluster: Decrease left GM
+          \item Cluster: Decrease left WM)
+          \end{enumerate}
+      \item Cluster: Decrease right (all right)
+          \begin{enumerate}
+          \setlength{\itemsep}{0pt}
+          \setlength{\parskip}{0pt}
+          \item Cluster: Decrease right GM
+          \item Cluster: Decrease right WM
+          \end{enumerate}
+      \end{enumerate}
+\item Cluster: All VBM (only VBM)
+\item Cluster: ALL DTI (Only DTI)
+\item Cluster: ALL GM (irrespective of increase or decrease)
+      \begin{enumerate}
+      \setlength{\itemsep}{0pt}
+      \setlength{\parskip}{0pt}
+      \item Cluster: GM increase
+      \item Cluster: GM decrease
+      \end{enumerate}
+\item Cluster: All WM (irrespective of increase or decrease)
+      \begin{enumerate}
+      \setlength{\itemsep}{0pt}
+      \setlength{\parskip}{0pt}
+      \item Cluster: WM increase
+      \item Cluster: WM decrease
+      \end{enumerate}
+\item Cluster: All Left
+      \begin{enumerate}
+      \setlength{\itemsep}{0pt}
+      \setlength{\parskip}{0pt}
+      \item Cluster: All left GM (to match regression figure panel)
+      \item Cluster: All left WM (to match regression figure panel)
+      \end{enumerate}
+\item Cluster: All right
+      \begin{enumerate}
+      \setlength{\itemsep}{0pt}
+      \setlength{\parskip}{0pt}
+      \item Cluster: All right GM (to match regression figure panel)
+      \item Cluster: All right WM (to match regression figure panel)
+      \end{enumerate}
+\end{enumerate}  
+  
+The important information for results is contained in the cl variable in the Activation\_clusters.mat file. This gives you a variable with 4 fields or cells, and within a cell is information about the regions (clusters/brain blobs) that pass the height threshold (referred to as cl\{1\}), the p \textless{} .001 threshold (referred to as cl\{2\}), the p \textless{} .01 threshold (referred to as cl\{3\}), and the p \textless{} .05 threshold (referred to as cl\{4\}), respectively.  
+  
+#### Cluster mKDA: Specific ROI cluster analysis (currAnalysis study contrast)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image1.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image2.png}
+
+#### Cluster mKDA: All MNI Coordinate mapping (currAnalysis\_uniform\_contrast)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image3.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image4.png}
+  
+#### Cluster mKDA: Increase (all increase)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image5.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image6.png}
+
+#### Cluster mKDA: Increase left (all left)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image7.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image8.png}
+
+#### Cluster mKDA: Increase left GM  
+No significant clusters found. No image map produced.
+
+#### Cluster mKDA: Increase left WM  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image9.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image10.png}
+
+#### Cluster mKDA: Decrease (all decrease)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image11.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image12.png}
+
+#### Cluster mKDA: Decrease left (all left)  
+No significant clusters found. No image map produced.
+
+#### Cluster mKDA: Decrease left GM  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image5.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image13.png}
+
+#### Cluster mKDA: Decrease left WM  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image14.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image15.png}
+
+#### Cluster mKDA: Decrease right (all right)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image16.png}
+   
+  **Coronal**   
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image17.png}
+
+#### Cluster mKDA: Decrease right GM  
+No significant clusters found. No image map produced.  
+
+#### Cluster mKDA: Decrease right WM  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image18.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image19.png}
+
+#### Cluster mKDA: All VBM (only VBM)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image20.png}
+   
+  **Coronal**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image21.png}
+
+#### Cluster mKDA: ALL DTI (Only DTI)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image22.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image23.png}
+
+#### Cluster mKDA: ALL GM (irrespective of increase or decrease)  
+No significant clusters found. No image map produced.  
+
+#### Cluster mKDA: GM increase  
+No significant clusters found. No image map produced.  
+
+#### Cluster mKDA: GM decrease  
+No significant clusters found. No image map produced.
+
+#### Cluster mKDA: All WM (irrespective of increase or decrease)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image24.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image25.png}
+
+#### Cluster mKDA: WM increase  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image26.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image27.png}
+
+#### Cluster mKDA: WM decrease  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image28.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image29.png}
+
+#### Cluster mKDA: All Left
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image30.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image31.png}
+
+#### Cluster mKDA: All left GM (match - regression figure panel)  
+No significant clusters found. No image map produced.  
+
+#### Cluster mKDA: All left WM (match - regression figure panel)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image32.png}  
+   
+  **Coronal**  
+ \includegraphics[width=4.45in,height=2.5in]{./media/media/image33.png}  
+
+#### Cluster mKDA: All Right  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image34.png}
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image35.png}
+
+#### Cluster mKDA: All right GM (match - regression figure panel)  
+No significant clusters found. No image map produced.
+
+#### Cluster mKDA: All right WM (match - regression figure panel)  
+  **Axial**    
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image36.png}  
+   
+  **Coronal**  
+\includegraphics[width=4.45in,height=2.5in]{./media/media/image37.png}  
+  
+\newpage
+  
 # Studies characteristics
 ## Relation between hearing loss (dB)  and age (Figure 2.D)  
 ```{r avgdB, echo=FALSE, warning=FALSE, message=FALSE,fig.height=5,fig.width=7}
@@ -1172,13 +1440,16 @@ cat("
   ")
 }
 ```  
-
   
-# Meta Plots  
+\newpage
+
+
+\newpage
+  
+# Meta plots information  
 
 ## The L’Abbé plot 
 In a L'Abbé plot (based on L'Abbé, Detsky, & O'Rourke, 1987), the arm-level outcomes for two experimental groups (e.g., treatment and control group) are plotted against each other. is treatment versus effect, since you have the cohen’s d this should be relatively simple.  
-> WE DON'T HAVE TWO EXPERIMENTAL GROUPS
   
 ## Baujat plot to identify studies contributing to heterogeneity  
 The plot shows the contribution of each study to the overall Q-test statistic for heterogeneity on the horizontal axis versus the influence of each study (defined as the standardized squared difference between the overall estimate based on a fixed-effects model with and without the ith study included in the model) on the vertical axis
@@ -1189,10 +1460,8 @@ Radial plot (radial) of variables and cohen’s d - Galbraith, Rex (1988). "Grap
 2.18.2. We want to see this type of error plot over time for our patient cohorts by age. we want this for each measure WM and GM versus age on the x-axis so we can see GM and WM over time! Do a monte carlo simulation to connect different age population and create the error.  
 For a fixed-effects model, the plot shows the inverse of the standard errors on the horizontal axis against the individual observed effect sizes or outcomes standardized by their corresponding standard errors on the vertical axis. On the right hand side of the plot, an arc is drawn corresponding to the individual observed effect sizes or outcomes. A line projected from (0,0) through a particular point within the plot onto this arc indicates the value of the individual observed effect size or outcome for that point.
   
-  
-# Resources  
-We are following Preferred Reporting Items for Systematic Reviews and Meta-Analyses guidelines: Moher, D., Liberati, A., Tetzlaff, J., Altman, D. G., and Prisma Group. (2009). Preferred reporting items for systematic reviews and meta-analyses: the PRISMA statement. PLoS Med. 6:e1000097. doi: 10.1371/journal.pmed.1000097 AND https://www.bmj.com/content/339/bmj.b2535  
-  
+### Further resources  
+We are following Preferred Reporting Items for Systematic Reviews and Meta-Analyses guidelines: Moher, D., Liberati, A., Tetzlaff, J., Altman, D. G., and Prisma Group. (2009). Preferred reporting items for systematic reviews and meta-analyses: the PRISMA statement. PLoS Med. 6:e1000097. doi: 10.1371/journal.pmed.1000097 AND https://www.bmj.com/content/339/bmj.b2535
 - https://stackoverflow.com/questions/14426637/how-to-do-bubble-plot  
 - https://www.researchgate.net/publication/296680807_Menstrual_hygiene_management_among_adolescent_girls_in_India_A_Systematic_review_and_meta-analysis/figures?lo=1  
   
