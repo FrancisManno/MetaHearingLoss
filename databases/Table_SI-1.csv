@@ -1,0 +1,24 @@
+﻿Cluster #,Volume (mm3),WC.x,WC.y,WC.z,Extrema Value,x,y,z,Label
+1,592,-43.2,-22.8,8.1,0.007556,-50,-20,8,Left Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 13
+1,592,-43.2,-22.8,8.1,0.007331,-43.6,-21.6,9.2,Left Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 13
+1,592,-43.2,-22.8,8.1,0.007112,-40.4,-25.8,7.3,Left Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 13
+2,584,44.9,-21.6,5.3,0.007556,44,-20,4,Right Cerebrum.Sub-lobar.Insula.Gray Matter.Brodmann area 13
+2,584,44.9,-21.6,5.3,0.007331,44.7,-22,3.3,Right Cerebrum.Sub-lobar.Insula.Gray Matter.Brodmann area 13
+2,584,44.9,-21.6,5.3,0.007112,44.9,-22.5,6.5,Right Cerebrum.Sub-lobar.Superior Temporal Gyrus.Gray Matter.Brodmann area 22
+3,272,41.1,-25.6,12.9,0.007331,39,-26,14,Right Cerebrum.Sub-lobar.Insula.Gray Matter.Brodmann area 13
+3,272,41.1,-25.6,12.9,0.007112,42,-25.5,12.5,Right Cerebrum.Temporal Lobe.Transverse Temporal Gyrus.Gray Matter.Brodmann area 41
+4,256,25.1,-14.7,20.4,0.007331,24.5,-14.5,20,Right Cerebrum.Sub-lobar.Lentiform Nucleus.Gray Matter.Putamen
+4,256,25.1,-14.7,20.4,0.007112,26,-15,21,Right Cerebrum.Sub-lobar.Thalamus.Gray Matter.*
+5,240,-17.6,-58.4,-16.3,0.007331,-14,-56,-15,Left Cerebellum.Anterior Lobe.Culmen.Gray Matter.*
+5,240,-17.6,-58.4,-16.3,0.007112,-19.5,-59.5,-17,Left Cerebellum.Anterior Lobe.Culmen.Gray Matter.*
+6,240,53.2,-20.6,0.8,0.007112,53.2,-20.6,0.8,Right Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 22
+7,232,-49.5,-5.9,-8.4,0.007331,-50,-7,-8,Left Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 22
+7,232,-49.5,-5.9,-8.4,0.007112,-48,-2.7,-11.3,Left Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 22
+7,232,-49.5,-5.9,-8.4,0.006901,-51,-9,-4,Left Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 22
+8,224,-1.9,-36.1,-8,0.007556,-6,-36,-8,Left Cerebellum.Anterior Lobe.Culmen.Gray Matter.*
+8,224,-1.9,-36.1,-8,0.007331,2,-35,-8,Left Cerebellum.Anterior Lobe.Culmen.Gray Matter.*
+8,224,-1.9,-36.1,-8,0.007112,-2,-37,-8,Left Cerebellum.Anterior Lobe.Culmen.Gray Matter.*
+9,208,30.9,-38.4,16.5,0.007556,32,-36,16,Right Cerebrum.Sub-lobar.Caudate.Gray Matter.Caudate Tail
+9,208,30.9,-38.4,16.5,0.007112,31,-42,17,Right Cerebrum.Sub-lobar.Caudate.Gray Matter.Caudate Tail
+10,192,57.5,-36.3,23.3,0.00734,54,-36,22,Right Cerebrum.Sub-lobar.Insula.Gray Matter.Brodmann area 13
+10,192,57.5,-36.3,23.3,0.007234,60,-38,24,Right Cerebrum.Temporal Lobe.Superior Temporal Gyrus.Gray Matter.Brodmann area 13

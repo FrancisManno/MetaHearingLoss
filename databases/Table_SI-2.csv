@@ -1,0 +1,32 @@
+﻿Contrasts,Folder,Height threshold clusters,p < 0.001 clusters,p < 0.01 clusters,p < 0.05 clusters,Description
+Study column in file,currAnalysis_study_contrast,2,2,6,0,"Clusters found significant in both hemispheres, but very small"
+Uniform (all contrasts one),currAnalysis_uniform_contrast,95,0,0,0,All clusters found significant and appear in final result
+Study contrast subanalyses,Folder (in studycontrast_subanalysis),,,,,Description
+Increase,currAnalysis_study_increase,2,0,0,0,One cluster in both hemispheres
+"Increase, left",currAnalysis_study_increase_left,0,2,0,0,One small cluster in the left hemisphere
+"Increase, left, GM",currAnalysis_study_increase_left_GM,0,0,0,0,No significant clusters found
+"Increase, left, WM",currAnalysis_study_increase_left_WM,3,0,0,0,One tiny cluster in the left hemisphere
+"Increase, right",currAnalysis_study_increase_right,1,0,0,0,Two clusters in the right hemisphere
+"Increase, right, GM",currAnalysis_study_increase_right_GM,1,0,0,0,Two small clusters in the right hemisphere
+"Increase, right, WM",currAnalysis_study_increase_right_WM,3,0,2,0,Multiple clusters in both hemispheres
+Decrease,currAnalysis_study_decrease,1,0,0,0,1 (2?) tiny clusters in left hemisphere
+"Decrease, left",currAnalysis_study_decrease_left,0,0,0,0,No significant clusters found
+"Decrease, left, GM",currAnalysis_study_decrease_left_GM,1,0,0,0,Tiny cluster in left hemisphere
+"Decrease, left, WM",currAnalysis_study_decrease_left_WM,1,3,1,0,Small clusters in left hemisphere
+"Decrease, right",currAnalysis_study_decrease_right,2,0,0,0,Tiny cluster in right hemisphere
+"Decrease, right, GM",currAnalysis_study_decrease_right_GM,0,0,0,0,No significant clusters found
+"Decrease, right, WM",currAnalysis_study_decrease_right_WM,2,0,0,0,Small clusters in left hemisphere
+VBM,currAnalysis_study_vbm,1,1,0,0,Small clusters in left hemisphere
+DTI,currAnalysis_study_DTI,2,0,0,0,Cluster in both
+GM,currAnalysis_study_GM,0,0,0,0,No significant clusters found
+"Increase, GM",currAnalysis_study_increase_GM,0,0,0,0,No significant clusters found
+"Decrease, GM",currAnalysis_study_decrease_GM,0,0,0,0,No significant clusters found
+WM,currAnalysis_study_WM,2,0,0,0,Cluster in both
+"Increase, WM",currAnalysis_study_increase_WM,3,0,2,0,Clusters in both hemispheres
+"Decrease, WM",currAnalysis_study_decrease_WM,1,0,0,0,Very tiny cluster in left
+Left,currAnalysis_study_left,2,0,0,0,Clusters in left
+"Left, GM",currAnalysis_study_left_GM,0,0,0,0,No significant clusters found
+"Left, WM",currAnalysis_study_left_WM,3,4,0,0,Clusters in left
+Right,currAnalysis_study_right,1,0,0,0,Two clusters in the right hemisphere
+"Right, GM",currAnalysis_study_right_GM,0,0,0,0,No significant clusters found
+"Right, WM",currAnalysis_study_right_WM,2,3,0,0,Clusters in right

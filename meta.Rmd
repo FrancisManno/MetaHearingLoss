@@ -126,7 +126,7 @@ Email: Francis.Manno@Sydney.edu.au
 \end{itemize}
 
 ### Figure SI.1 Flow diagram
-![Flowchart of data-acquisition* All available bilateral/unilateral studies were analyzed.](S1.1_flow_diagram.png)
+![Flowchart of data-acquisition* All available bilateral/unilateral studies were analyzed.](./media/S1.1_flow_diagram.png)
 
 ## Eligibility Criteria for the meta-regression  
 We included peer-review publications in English, involving patients with bilateral congenital and mixed hearing loss and controls with structural Magnetic Resonance Imaging. We included cross-sectional studies with control groups, that investigated the structural relation between MRI changes and the hearing loss. The most common MRI measures were **volume, FA, VBM and thickness.** Each measure was assignated to a specific ROI and to a big brain area. (eg. HG and superior temporal lobe belong to **temporal lobe**).
@@ -153,7 +153,7 @@ source("meta_functions.R")
 
 # table size \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, and \Huge
 # Upload database
-meta <- read.csv("meta_sideDeaf_full.csv")
+meta <- read.csv("databases/meta_sideDeaf_full.csv")
 
 # Source of studies, "author + year"
 meta$Source <- paste0(meta$year,", ",meta$study)
@@ -361,33 +361,47 @@ Seed-based d Mapping (formerly "Signed Differential Mapping"):
 \scriptsize   
 ### Signed differential mapping (SDM): tables    
 ```{r sdm, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
-sdm <- read.csv(file = "SDM_table.csv")
+sdm <- read.csv(file = "databases/SDM_table.csv")
 rownames(sdm) <- NULL
 pandoc.header(paste("SDM: congenital"), level = 3)
-  print(kable(sdm[sdm$group=="congenital",1:6][1:59,], "latex", booktabs = T,row.names = FALSE) %>%
+  print(kable(sdm[sdm$group=="congenital",1:6][1:59,], "latex", booktabs = T,row.names = FALSE, caption = "SDM: congenital") %>%
   kable_styling(latex_options = c("striped", "scale_down", "condensed")))
   
-  print(kable(sdm[sdm$group=="congenital",1:6][60:81,], "latex", booktabs = T,row.names = FALSE) %>%
+  print(kable(sdm[sdm$group=="congenital",1:6][60:81,], "latex", booktabs = T,row.names = FALSE, caption = "SDM: congenital..continuation") %>%
   kable_styling(latex_options = c("striped", "scale_down", "condensed")))
   
 for (i in c("acquired", "pediatric", "adult", "AgedAdult","GM", "WM")) {
   pandoc.header(paste("SDM:",i), level = 3)
-  print(kable(sdm[sdm$group==i,1:6], "latex", booktabs = T,row.names = FALSE) %>%
+  print(kable(sdm[sdm$group==i,1:6], "latex", booktabs = T,row.names = FALSE, caption = paste("SDM:",i)) %>%
   kable_styling(latex_options = c("striped", "scale_down", "condensed")))
 }
 ```
     
-\normalsize  
+\newpage  
 
+\normalsize  
 ## Anatomic Likelihood Estimation  
 Fox PT, Lancaster JL. Mapping context and content: the BrainMap model. Nat Rev Neurosci. 2002 Apr;3(4):319-21.  
 > http://www.brainmap.org/ale/  
 > http://www.brainmap.org/scribe/  
+  
+**Table ALE report of first 10 clusters:** WC: weighted center.  
 
-## Multi-Level Kernel Density Analysis (MKDA): Wager Methods  
+    
+```{r ale.tab, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
+ale.tab <- read.csv(file = "databases/Table_SI-1.csv",row.names = NULL, na.strings = ' ')
+colnames(ale.tab) <- c('Cluster Number', '$Volume mm^3$', 'WC.x', 'WC.y', 'WC.z', 'Extrema value', 'x', 'y', 'z', 'Label')
+# pandoc.header(paste("ALE report of first 10 clusters"), level = 3)
+  print(kable(ale.tab, "latex", booktabs = T,row.names = FALSE, caption = 'ALE report of first 10 clusters') %>%
+  kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+```
+
+\normalsize      
+    
+## Multi-Level Kernel Density Analysis (mKDA): Wager Methods  
 https://github.com/canlab/Canlab MKDA MetaAnalysis  
 
-### Definitions for MKDA  
+### Definitions for mKDA  
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi})}
   \item Cluster Definitions (KDA documentation of Wager's scripts)
@@ -396,6 +410,18 @@ https://github.com/canlab/Canlab MKDA MetaAnalysis
   \item Clusters in red - these are incremental clusters that pass the medium extent-based threshold (p \textless{} .01) that are not within 10 mm of the clusters for the height-corrected and stringent extent-corrected thresholds.
   \item Clusters in purple - these are incremental clusters that pass thelenient extent-based threshold (p \textless{} .05) that are not within10 mm of the clusters for the height-corrected, as well as the stringent and medium extent-corrected thresholds.
 \end{enumerate}  
+  
+**Table mKDA report:** Color of clusters in images:	YELLOW,	ORANGE,	RED and	PURPLE  
+  
+  
+```{r mkda, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
+mkda.tab <- read.csv(file = "databases/Table_SI-2.csv",row.names = NULL, na.strings = ' ')
+colnames(mkda.tab) <- c("Contrasts", "Folder", "Height threshold clusters", "p<0.001 clusters", "p<0.01 clusters", "p<0.05 clusters", "Description")
+# pandoc.header(paste("mKDA report"), level = 3)
+  print(kable(mkda.tab, "latex", booktabs = T,row.names = FALSE, caption = "mKDA report") %>%
+  kable_styling(latex_options = c("striped", "scale_down", "condensed")))
+```
+  
   
 The following cluster definitions used by Wager's scripts are briefly summarized (see SI for extended analysis). Yellow indicates clusters surpass the height-corrected threshold and orange, red and purple clusters are not within 10 mm of the clusters for the height-corrected. Further, orange indicates clusters pass the most stringent extent-based threshold (p \textless{} .001), red indicates clusters that pass the medium extent-based threshold (p \textless{} .01) and purple indicates clusters pass the lenient extent-based threshold (p \textless{} .05). The primary mKDA analyses were done for acquired and congenital separately and combined. Additional analyses are found in the SI.  
   
@@ -1318,7 +1344,6 @@ for (i in 1:dim(hedgeG)[1]) {
   else {N <- c(N, 0) }
 }
 hedgeG$N <- N
-#write.csv(hedgeG[order(hedgeG$N),],"metareg_estimates.csv",row.names = FALSE)
 
 # Forest plot
 sub.forest(meta.reml,Title = "acquired White Matter FA")
