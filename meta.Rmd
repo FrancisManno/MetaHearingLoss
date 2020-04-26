@@ -138,7 +138,7 @@ Notes for inclusion:
 \item  Xia et al. Chin J Med Img Tech, 2008 had 40 patients in total, in two groups 9-12 years and 19-22 years.  
 \item  For some studies (eg. 2017, Ritgers et al. Front. Aging Neurosci) it was not possible to calculate the Hegdes'G variance and were not include in some specific meta-regressions.  
 \item Studies with \textit{Mixed etiology} were excluded, due to a non representative low number (n=3).
-\item  Zheng et al. Sci Rep, 2017 this variables change; Con rangeLow	Con rangeHigh. Why? I didn't find them on the orignal paper.  
+\item  Zheng et al. Sci Rep, 2017 this variables change; Con rangeLow	Con rangeHigh.    
 \end{enumerate}  
 
 
@@ -292,6 +292,10 @@ pander(noHedges,caption = "Studies with Hedges'G (n=57, mixed etiology=3)",split
 ```    
   
 \normalsize  
+
+## Unusual cases  
+The measurement of Fractional anisotropy is rather unsual for quantifiying gray matter tissue. However, some studies have used this parameter.  
+
   
 ## Formulas
 Effect size direction was directly include in the Cohen's D value by mutipliying by -1 if the effect was decrease and by 1 if it was none of increased.
@@ -357,21 +361,21 @@ Seed-based d Mapping (formerly "Signed Differential Mapping"):
   
 1. Radua J, Mataix-Cols D. Voxel-wise meta-analysis of grey matter changes in obsessive-compulsive disorder. Br J Psychiatry. 2009; 195:393--402.  
 1. Radua J, van den Heuvel OA, Surguladze S, Mataix-Cols D. Meta-analytical comparison of voxel based morphometry studies in obsessive-compulsive disorder vs other anxiety disorders. Arch Gen Psychiatry. 2010; 67:701--711.  
-
-\scriptsize   
-### Signed differential mapping (SDM): tables    
+  
+\scriptsize  
+  
 ```{r sdm, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
 sdm <- read.csv(file = "databases/SDM_table.csv")
 rownames(sdm) <- NULL
-pandoc.header(paste("SDM: congenital"), level = 3)
+#pandoc.header(paste("SDM: congenital"), level = 4)
   print(kable(sdm[sdm$group=="congenital",1:6][1:59,], "latex", booktabs = T,row.names = FALSE, caption = "SDM: congenital") %>%
   kable_styling(latex_options = c("striped", "scale_down", "condensed")))
   
-  print(kable(sdm[sdm$group=="congenital",1:6][60:81,], "latex", booktabs = T,row.names = FALSE, caption = "SDM: congenital..continuation") %>%
+  print(kable(sdm[sdm$group=="congenital",1:6][60:81,], "latex", booktabs = T,row.names = FALSE, caption = "SDM: congenital... continuation") %>%
   kable_styling(latex_options = c("striped", "scale_down", "condensed")))
   
 for (i in c("acquired", "pediatric", "adult", "AgedAdult","GM", "WM")) {
-  pandoc.header(paste("SDM:",i), level = 3)
+  #pandoc.header(paste("SDM:",i), level = 4)
   print(kable(sdm[sdm$group==i,1:6], "latex", booktabs = T,row.names = FALSE, caption = paste("SDM:",i)) %>%
   kable_styling(latex_options = c("striped", "scale_down", "condensed")))
 }
@@ -385,7 +389,7 @@ Fox PT, Lancaster JL. Mapping context and content: the BrainMap model. Nat Rev N
 > http://www.brainmap.org/ale/  
 > http://www.brainmap.org/scribe/  
   
-**Table ALE report of first 10 clusters:** WC: weighted center.  
+*Table 15. ALE report of first 10 clusters:* WC: weighted center.  
 
     
 ```{r ale.tab, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}  
