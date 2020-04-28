@@ -1,5 +1,5 @@
 ---
-title: "How hearing loss across the lifespan affects the brain: Structural correlates of hearing loss assessed by coordinate mapping using quantitative metrics of gray and white matter trajectories - Systematic review, meta-analysis and meta-regression"
+title: "Hearing loss impacts brain structure across the lifespan: Systematic review, meta-analysis and meta-regression of quantitative metrics of gray and white matter"
 author: "" 
 output:
   pdf_document
