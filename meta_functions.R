@@ -76,7 +76,7 @@ sub.forest2 <- function(meta.mod, Title, res=NULL) { par(mfrow=c(1,1))
   # par margins
   par(mar=c(4,4,1,2))
   forest(res, xlim=c(-16, 6), at=c(-5,0,3),
-         ilab=cbind(round(meta.mod[,c("HL.age","Con.Age","N.total")],2),meta.mod$big.side),
+         ilab=cbind(round(meta.mod[,c("HL.age","Con.Age")],2),meta.mod$ROI,meta.mod$Etiology),
          ilab.xpos=c(-12,-11,-10,-7.5), cex=0.75, ylim=c(-1, max(Row)+4),
          order=order(Sublevel,meta.mod$hedgesG),rows=Row,showweights = TRUE,
          xlab="Hedge's G", mlab="", psize=1,col = "gray35",border = "gray35", col.predict = "blue")
@@ -99,7 +99,7 @@ sub.forest2 <- function(meta.mod, Title, res=NULL) { par(mfrow=c(1,1))
   # Main Title
   text(-5,D+4+max(K), Title,cex = 1.5)
   ### add column headings to the plot
-  text(c(-12,-11,-10,-7.5), D+2.5+max(K), c("Ptn", "Ctl", "N", "ROI"))
+  text(c(-12,-11,-10,-7.5), D+2.5+max(K), c("Ptn", "Ctl", "ROI", "Etiology"))
   text(c(-11.5),           D+3+max(K), c("Age"))
   text(-16,               D+2.5+max(K), "Year & Author",  pos=4,font=2)
   text(3,                 D+2.5+max(K), "Weights", pos=2,cex = 0.75)
