@@ -1065,7 +1065,7 @@ colnames(struct.Age) <- c("Model", 'r', 'p-value', 't.stat', 'df')
 pander(struct.Age)
 
 # Meta-regression for HedgesG by age
-metareg.plot <- function(Data, Title) {
+metareg.plot <- function(Data, Title, Return=FALSE) {
 m.hkj <- metagen(hedgesG,
                   varG,
                   data = Data,
@@ -1081,7 +1081,7 @@ bubble(output.metareg, main=Title, pty='n',
        xlab = "Age",
        col.line = "blue",
        studlab = TRUE, min.cex = 0.5, max.cex = 2) 
-#return(output.metareg)
+if (Return!=FALSE){ return(output.metareg)}
 }
 par(mfrow=c(1,2))
 metareg.plot(WM.fa.R, 'WM FA right and Age')
@@ -1145,6 +1145,27 @@ for (i in c("WM-volume", "GM-FA", "WM-FA", "GM+WM-volume")) {
 }
 ```
 
+\newpage
+## Meta-regressions of Gray Matter in the Heschl Gyrus  
+Random effects model no intercept covariated by etiology and age  
+```{r HG,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=9}
+# Pediatric GM in Heschl' gyrus
+hg.gm <- meta[meta$ROI=="HG" & meta$matter=="GM", ]
+hg.gm$measure <- droplevels(hg.gm$measure)
+hg.gm <- hg.gm[!is.na(hg.gm$HL.age),]
+
+# Meta regression
+hg.res <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(Etiology)+HL.age-1, measure = "MD",method = "REML",data = hg.gm)
+hg.tab <- data.frame(HedgeG=hg.res$beta,se=hg.res$se,zval=hg.res$zval,ci.lo=hg.res$ci.lb,ci.up=hg.res$ci.ub,pval=hg.res$pval)
+rownames(hg.tab) <- c("Acquired", "Congenital", "HL.age")
+pander(hg.tab, caption = "Gray Matter in Heschl Gyrus", split.table = Inf, graph.fontsize=6)
+
+# forest plot
+sub.forest2(hg.gm[hg.gm$Etiology=="congenital",], "Congenital Gray Matter in Heschl Gyrus")
+sub.forest2(hg.gm[hg.gm$Etiology=="acquired",], "Acquired Gray Matter in Heschl Gyrus")
+
+```
+  
 \newpage
 ## Acquired - Meta-regressions of Gray Matter Volume  
 Random effects model no intercept covariated by Big area  
