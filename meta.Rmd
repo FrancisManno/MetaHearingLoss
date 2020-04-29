@@ -293,9 +293,30 @@ pander(noHedges,caption = "Studies with Hedges'G (n=57, mixed etiology=3)",split
   
 \normalsize  
 
-## Unusual cases  
-The measurement of Fractional anisotropy is rather unsual for quantifiying gray matter tissue. However, some studies have used this parameter.  
+## Unusual MRI measurements  
+  
+\footnotesize
+  
+```{r unusual, echo=FALSE, message=FALSE, warning=FALSE}
+noms <- c("Source", "measure", "matter", "Big.area", "Side", "ROI")
+# Slicing Cortical thickness of WM
+meta.ctWM <- meta[meta$measure=="CT" | meta$measure=="Thickness", ]
+meta.ctWM <- meta.ctWM[meta.ctWM$matter=="WM",]
+meta.ctWM <- meta.ctWM[,noms]
+# Slicing FA measure of Gray matter
+meta.faGM <- meta[meta$measure=="FA" & meta$matter=="GM",]
+meta.faGM <- meta.faGM[,noms]
+colnames(meta.faGM) <- colnames(meta.ctWM) <- c("Source", "MRI measure", "Matter", "Brain area", "Side", "ROI")
+rownames(meta.faGM) <- rownames(meta.ctWM) <- NULL
 
+# print tables 
+pander(meta.ctWM,caption = "Studies Measuring White Matter Thickness (n=4)",split.table = Inf, graph.fontsize=6)
+pander(meta.faGM,caption = "Studies Measuring Gray Matter FA (n=2)",split.table = Inf, graph.fontsize=6)
+
+rm(meta.ctWM, meta.faGM, noms)
+```
+  
+\normalsize  
   
 ## Formulas
 Effect size direction was directly include in the Cohen's D value by mutipliying by -1 if the effect was decrease and by 1 if it was none of increased.
@@ -1468,34 +1489,31 @@ for (i in c("Thickness", "VBM")){
 cat("  
   ")
 }
+
+# # Meta plots information  
+# 
+# ## The L’Abbé plot 
+# In a L'Abbé plot (based on L'Abbé, Detsky, & O'Rourke, 1987), the arm-level outcomes for two experimental groups (e.g., treatment and control group) are plotted against each other. is treatment versus effect, since you have the cohen’s d this should be relatively simple.  
+#   
+# ## Baujat plot to identify studies contributing to heterogeneity  
+# The plot shows the contribution of each study to the overall Q-test statistic for heterogeneity on the horizontal axis versus the influence of each study (defined as the standardized squared difference between the overall estimate based on a fixed-effects model with and without the ith study included in the model) on the vertical axis
+# 2.17. Funnel plot to illustrate publication bias  
+# 
+# ## Galbraith plot  
+# Radial plot (radial) of variables and cohen’s d - Galbraith, Rex (1988). "Graphical display of estimates having differing standard errors". Technometrics. Technometrics, Vol. 30, No. 3. 30 (3): 271–281.  
+# 2.18.2. We want to see this type of error plot over time for our patient cohorts by age. we want this for each measure WM and GM versus age on the x-axis so we can see GM and WM over time! Do a monte carlo simulation to connect different age population and create the error.  
+# For a fixed-effects model, the plot shows the inverse of the standard errors on the horizontal axis against the individual observed effect sizes or outcomes standardized by their corresponding standard errors on the vertical axis. On the right hand side of the plot, an arc is drawn corresponding to the individual observed effect sizes or outcomes. A line projected from (0,0) through a particular point within the plot onto this arc indicates the value of the individual observed effect size or outcome for that point.
+#   
+# ### Further resources  
+# We are following Preferred Reporting Items for Systematic Reviews and Meta-Analyses guidelines: Moher, D., Liberati, A., Tetzlaff, J., Altman, D. G., and Prisma Group. (2009). Preferred reporting items for systematic reviews and meta-analyses: the PRISMA statement. PLoS Med. 6:e1000097. doi: 10.1371/journal.pmed.1000097 AND https://www.bmj.com/content/339/bmj.b2535
+# - https://stackoverflow.com/questions/14426637/how-to-do-bubble-plot  
+# - https://www.researchgate.net/publication/296680807_Menstrual_hygiene_management_among_adolescent_girls_in_India_A_Systematic_review_and_meta-analysis/figures?lo=1  
+#   
+# ### Good explanation of some of the plots:  
+# - https://ora.ox.ac.uk/objects/uuid:ff78831d-6f82-4187-97cc-349058e9abde/download_file?file_format=pdf&safe_filename=Rahimi%2Bet%2Bal%252C%2BData%2Bvisualisation%2Bfor%2Bmeta-analysis.pdf&type_of_work=Journal+article  
+
 ```  
   
-\newpage
-
-
-\newpage
-  
-# Meta plots information  
-
-## The L’Abbé plot 
-In a L'Abbé plot (based on L'Abbé, Detsky, & O'Rourke, 1987), the arm-level outcomes for two experimental groups (e.g., treatment and control group) are plotted against each other. is treatment versus effect, since you have the cohen’s d this should be relatively simple.  
-  
-## Baujat plot to identify studies contributing to heterogeneity  
-The plot shows the contribution of each study to the overall Q-test statistic for heterogeneity on the horizontal axis versus the influence of each study (defined as the standardized squared difference between the overall estimate based on a fixed-effects model with and without the ith study included in the model) on the vertical axis
-2.17. Funnel plot to illustrate publication bias  
-
-## Galbraith plot  
-Radial plot (radial) of variables and cohen’s d - Galbraith, Rex (1988). "Graphical display of estimates having differing standard errors". Technometrics. Technometrics, Vol. 30, No. 3. 30 (3): 271–281.  
-2.18.2. We want to see this type of error plot over time for our patient cohorts by age. we want this for each measure WM and GM versus age on the x-axis so we can see GM and WM over time! Do a monte carlo simulation to connect different age population and create the error.  
-For a fixed-effects model, the plot shows the inverse of the standard errors on the horizontal axis against the individual observed effect sizes or outcomes standardized by their corresponding standard errors on the vertical axis. On the right hand side of the plot, an arc is drawn corresponding to the individual observed effect sizes or outcomes. A line projected from (0,0) through a particular point within the plot onto this arc indicates the value of the individual observed effect size or outcome for that point.
-  
-### Further resources  
-We are following Preferred Reporting Items for Systematic Reviews and Meta-Analyses guidelines: Moher, D., Liberati, A., Tetzlaff, J., Altman, D. G., and Prisma Group. (2009). Preferred reporting items for systematic reviews and meta-analyses: the PRISMA statement. PLoS Med. 6:e1000097. doi: 10.1371/journal.pmed.1000097 AND https://www.bmj.com/content/339/bmj.b2535
-- https://stackoverflow.com/questions/14426637/how-to-do-bubble-plot  
-- https://www.researchgate.net/publication/296680807_Menstrual_hygiene_management_among_adolescent_girls_in_India_A_Systematic_review_and_meta-analysis/figures?lo=1  
-  
-### Good explanation of some of the plots:  
-- https://ora.ox.ac.uk/objects/uuid:ff78831d-6f82-4187-97cc-349058e9abde/download_file?file_format=pdf&safe_filename=Rahimi%2Bet%2Bal%252C%2BData%2Bvisualisation%2Bfor%2Bmeta-analysis.pdf&type_of_work=Journal+article  
 
 
   
