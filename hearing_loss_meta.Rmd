@@ -1163,11 +1163,36 @@ pander(hg.tab, caption = "Gray Matter in Heschl Gyrus", split.table = Inf, graph
 # forest plot
 sub.forest2(hg.gm[hg.gm$Etiology=="congenital",], "Congenital Gray Matter in Heschl Gyrus")
 sub.forest2(hg.gm[hg.gm$Etiology=="acquired",], "Acquired Gray Matter in Heschl Gyrus")
+rm(hg.gm, hg.res)
+```
+  
+\newpage
+## Meta-regressions of Gray Matter in Congenital by severity  and side (volume and VBM)   
+Random effects model no intercept covariated by severity and age  
+```{r cong.sev,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=9}
+# Pediatric GM in Heschl' gyrus
+con.sev <- meta[meta$Etiology=="congenital" & meta$matter=="GM", ]
+con.sev$Severeity <- droplevels(con.sev$Severeity)
+con.sev <- con.sev[!is.na(con.sev$HL.age),]
+con.sev <- con.sev[con.sev$measure=="VBM" | con.sev$measure=="volume",]
+con.sev$measure <- droplevels(con.sev$measure)
+con.sev$SevSid <- as.factor(paste0(con.sev$Side, ".",con.sev$Severeity))
+
+# Meta regression
+hg.res <- rma(yi=hedgesG, vi=varG, slab = study, mods=~factor(SevSid)+HL.age-1, measure = "MD",method = "REML",data = con.sev)
+hg.tab <- data.frame(HedgeG=hg.res$beta,se=hg.res$se,zval=hg.res$zval,ci.lo=hg.res$ci.lb,ci.up=hg.res$ci.ub,pval=hg.res$pval, row.names = NULL)
+rownames(hg.tab) <- c(levels(con.sev$SevSid), "Hl.age")
+pander(hg.tab, caption = "Congenital Gray Matter by severity", split.table = Inf, graph.fontsize=6)
+
+# forest plot
+# for (i in names(table(con.sev$Severeity))) {
+#   sub.forest(con.sev[con.sev$Severeity==i,], paste("Gray Matter in Congenital",i))
+# }
 
 ```
   
 \newpage
-## Acquired - Meta-regressions of Gray Matter Volume  
+## Congenital - Meta-regressions of Gray Matter Volume  
 Random effects model no intercept covariated by Big area  
 ```{r congenital.GM,  echo=FALSE, warning=FALSE, message=FALSE, results='asis',fig.width=11,fig.height=15}
 # CONGENITAL, GRAY MATTER AND VOLUME sliced data
