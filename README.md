@@ -1,15 +1,13 @@
 # Hearing loss impacts brain structure across the lifespan: Systematic review, meta-analysis and meta-regression of quantitative metrics of gray and white matter  
   
-Francis A. M. Manno DPhil, $PhD^{1,2}$^†, Raul Rodríguez-Cruces $MD, PhD^3*$, Rachit Kumar $BS^4*$, Yilai Shu $MD, PhD^5$, J. Tilak Ratnanather $DPhil^6$, Condon Lau $PhD^2$  
+Francis A. M. Manno DPhil, PhD<sup>1,2</sup>†, Raul Rodríguez-Cruces MD, PhD<sup>3</sup>, Rachit Kumar BS<sup>4</sup>, Yilai Shu MD, PhD<sup>5</sup>, J. Tilak Ratnanather DPhil<sup>6</sup>, Condon Lau PhD<sup>2</sup>  
   
-\small
 **1.** School of Biomedical Engineering, Faculty of Engineering, University of Sydney, Sydney, New South Wales, Australia  
 **2.** Department of Physics, City University of Hong Kong, Kowloon, Hong Kong SAR, China  
 **3.** Montreal Neurological Institute, McGill University, Montreal, Canada  
 **4.** Wallace H. Coulter Department of Biomedical Engineering, Georgia Institute of Technology and Emory University, Atlanta, GA, USA  
 **5.** ENT Institute and Otorhinolaryngology Department of the Affiliated Eye and ENT Hospital, State Key Laboratory of Medical   Neurobiology, Institutes of Biomedcial Sciences, Fudan University, Shanghai, China  
 **6.** Center for Imaging Science and Institute for Computational Medicine, Department of Biomedical Engineering, Johns Hopkins University, Baltimore, MD, USA  
-\normalsize  
 
 **Corresponding:** <francis.manno@sydney.edu.au>  
 
