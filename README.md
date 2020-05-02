@@ -18,7 +18,7 @@ Francis A. M. Manno DPhil, PhD<sup>1,2</sup>†, Raul Rodríguez-Cruces MD, PhD<
 Abstract
 ========
   
-**Importance.**  Hearing loss is a heterogeneous disorder thought to affect brain reorganization across the lifespan. The exact structural endophenotype of hearing loss is not known, although it is assumed to affect the auditory regions of the temporal lobe such as Heschl's gyrus.
+**Importance.**  Hearing loss is a heterogeneous disorder thought to affect brain reorganization across the lifespan. The exact structural endophenotype of hearing loss is not known, although it is assumed to affect the auditory regions of the temporal lobe such as Heschl's gyrus.  
 **Objective.**  Here we assessed the structural alterations of hearing loss by using a meta-analysis of effect size measures based on MNI coordinate mapping of MRI studies. Unique effect size metrics based on Cohen’s d and Hedges’ g were created to map coordinates of gray matter (GM) and white matter (WM) alterations from bilateral congenital and acquired hearing loss populations. Three coordinate mapping techniques were used and compared: coordinate-based anatomic likelihood estimation (ALE), multi-level kernel density analysis (mKDA), and seed-based d Mapping (SDM). Using a meta-regression, GM and WM trajectories were mapped to visualize the progression of congenital and acquired hearing loss. Heterogeneity in effect size metrics was determined using the forest, Baujat, Funnel, Galbraith and bubble plots to discern dispersion and spread of datapoints. Lastly, we displayed an endophenotype map of hearing loss alterations in GM and WM obtained from a multivariable meta-regression of the effect size.
   
 Repository contents
