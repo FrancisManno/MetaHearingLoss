@@ -13,7 +13,7 @@ Francis A. M. Manno DPhil, PhD<sup>1,2</sup>†, Raul Rodríguez-Cruces MD, PhD<
 
 **OSF:** <https://osf.io/7y59j/>  
 
-**Keywords:** Sensorineural hearing loss, Structural MRI, DTI, Bilateral hearing loss, Unilateral hearing loss  
+**Keywords:** Sensorineural hearing loss, Structural MRI, DTI, Bilateral hearing loss, Unilateral hearing loss. 
 
 Abstract
 ========
