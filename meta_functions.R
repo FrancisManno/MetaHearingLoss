@@ -23,7 +23,7 @@ lollipop <- function(Table, Title, Ylim, Order=TRUE, Color="royalblue3") {
         axis.ticks.y = element_blank()
       ) +
       xlab("") +
-      ylab("Frecuency") +
+      ylab("Frequency") +
       ggtitle(Title) +
       theme_grey(base_family="Arial") 
   } else {
@@ -39,7 +39,7 @@ lollipop <- function(Table, Title, Ylim, Order=TRUE, Color="royalblue3") {
          axis.ticks.y = element_blank()
       ) +
       xlab("") +
-      ylab("Frecuency") +
+      ylab("Frequency") +
       ggtitle(Title) +
       theme_grey(base_family="Arial") 
   }
