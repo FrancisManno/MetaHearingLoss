@@ -1,18 +1,34 @@
-# Hearing loss impacts brain structure across the lifespan: Systematic review, meta-analysis and meta-regression of quantitative metrics of gray and white matter  
+# Hearing loss impacts gray and white matter across the lifespan: systematic review, meta-analysis and meta-regression.   
   
-Francis A. M. Manno DPhil, PhD<sup>1,2</sup>†, Raul Rodríguez-Cruces MD, PhD<sup>3</sup>, Rachit Kumar BS<sup>4</sup>, Yilai Shu MD, PhD<sup>5</sup>, J. Tilak Ratnanather DPhil<sup>6</sup>, Condon Lau PhD<sup>2</sup>  
+Francis A. M. Manno<sup>1</sup>†, Raul Rodríguez-Cruces<sup>2*</sup>, Rachit Kumar BS<sup>3,4*</sup>, J. Tilak Ratnanather DPhil<sup>5</sup>, Condon Lau PhD<sup>2</sup>†  
   
-**1.** School of Biomedical Engineering, Faculty of Engineering, University of Sydney, Sydney, New South Wales, Australia  
-**2.** Department of Physics, City University of Hong Kong, Kowloon, Hong Kong SAR, China  
-**3.** Montreal Neurological Institute, McGill University, Montreal, Canada  
-**4.** Wallace H. Coulter Department of Biomedical Engineering, Georgia Institute of Technology and Emory University, Atlanta, GA, USA  
-**5.** ENT Institute and Otorhinolaryngology Department of the Affiliated Eye and ENT Hospital, State Key Laboratory of Medical   Neurobiology, Institutes of Biomedcial Sciences, Fudan University, Shanghai, China  
-**6.** Center for Imaging Science and Institute for Computational Medicine, Department of Biomedical Engineering, Johns Hopkins University, Baltimore, MD, USA  
-
-**Corresponding:** <francis.manno@sydney.edu.au>  
-
-**OSF:** <https://osf.io/7y59j/>  
-
+**1.** Department of Physics, City University of Hong Kong, Kowloon, Hong Kong SAR, China  
+**2.** Montreal Neurological Institute, McGill University, Montreal, Canada  
+**3.** Perelman School of Medicine, University of Pennsylvania, Philadelphia, USA  
+**4.** Medical Scientist Training Program at the University of Pennsylvania, Philadelphia, USA  
+**5.** Center for Imaging Science and Institute for Computational Medicine, Department of Biomedical Engineering, Johns Hopkins University, Baltimore, MD, USA  
+  
+**†Corresponding Author:**  
+Francis A.M. Manno  
+Department of Physics  
+City University of Hong Kong  
+HKSAR, China 
+Email: <francis.Manno@gmail.com>  
+  
+Condon Lau  
+Department of Physics  
+City University of Hong Kong  
+HKSAR, China  
+Email: condon.lau@cityu.edu.hk  
+   
+**Data availability statement:** The entire dataset, analyses and code used in this work can be downloaded by contacting the corresponding author and from the Open Science Framework: Manno, et al., 2018. “Profound Hearing Loss.” OSF. https://osf.io/7y59j/.  
+  
+**Declaration of Interests:** The authors declare no competing financial interests and no non-financial competing interests.  
+  
+**Author Contributions:** Conceptualization, FAMM JTR, CL; Methodology, FAMM, RRC; Formal Analysis, FAMM, RRC, RK; Visualization FAMM, RRC, RK; Investigation, FAMM, JTR; Writing, Editing, FAMM, RRC, RK, JTR, CL; Funding CL  
+  
+*Equal contributions  
+  
 **Keywords:** Sensorineural hearing loss, Structural MRI, DTI, Bilateral hearing loss, Unilateral hearing loss. 
 
 Abstract
