@@ -933,14 +933,40 @@ bargraph(table(meta$matter)[order(table(meta$matter),decreasing = FALSE)], "Area
 ```
   
 ```{r bar2, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4, fig.width=10}
-# Etiology by SEVERITY
-par(mfrow=c(1,2))
-Col <- c("#F8766D", "#00BFC4")
-barplot(table(studies$Etiology, studies$Severeity)[1:2,], main = "Fig.2.E - Severity", beside = FALSE, col=alpha(Col,0.6), border = Col, xlab='Number of studies', horiz = TRUE, las=2, cex.names=0.75)
 
-# Etiology by EFFECT DIRECTION
-barplot(prop.table(table(meta$Etiology, meta$effect), 1)[,3:5],  main = "Fig.2.F - Effect direction", beside = TRUE, col=alpha(Col,0.6), xlab='Relative percentage', border = Col, horiz = TRUE, las=2, cex.names=0.75)
-# add legend
+### FIGURE 2.E  -   Severity
+# Sort severity levels
+studies$Severeity <- ordered(studies$Severeity, levels = c("mild", "mild/moderate","mild/moderate/severe", "moderate", "moderate/severe", "severe", "severe/profound", "profound"))
+studies$Etiology <- droplevels(studies$Etiology)
+# create data.frame from table
+etiology <- data.frame(table(studies$Etiology, studies$Severeity))
+colnames(etiology) <- c("Etiology", "Severity", "Number") 
+# Stacked barplot with multiple groups
+ggplot(data=etiology, aes(x=Severity, y=Number, fill=Etiology)) +
+  geom_bar(stat="identity") + coord_flip() +
+  labs(title="Figure 2.E - Severity", y ="Number of studies", x = "")
+
+### FIGURE 2.F  -   Effect size direction 
+meta$effect <- droplevels(meta$effect)
+meta$Etiology <- droplevels(meta$Etiology)
+effect <- data.frame(prop.table(table(meta$Etiology, meta$effect)[,-1], 1))
+colnames(effect) <- c("Etiology", "effect", "Proportion") 
+# Stacked barplot with multiple groups
+ggplot(data=effect, aes(x=effect, y=Proportion, fill=Etiology)) +
+  geom_bar(stat="identity", position=position_dodge()) + coord_flip() +
+  ylim(0, 0.7) +
+  labs(title="Figure 2.F - Effect size direction", y ="Relative percentage", x = "")
+
+# -------------------------------------
+# Same figures with barplot
+# par(mfrow=c(1,2))
+# FIGURE 2.E - Etiology by SEVERITY
+# Col <- c("#F8766D", "#00BFC4")
+# barplot(table(studies$Etiology, studies$Severeity)[1:2,], main = "Fig.2.E - Severity", beside = FALSE, col=alpha(Col,0.6), border = Col, xlab='Number of studies', horiz = TRUE, las=2, cex.names=0.75)
+
+# # Etiology by EFFECT DIRECTION
+# barplot(prop.table(table(meta$Etiology, meta$effect), 1)[,3:5],  main = "Fig.2.F - Effect direction", beside = TRUE, col=alpha(Col,0.6), xlab='Relative percentage', border = Col, horiz = TRUE, las=2, cex.names=0.75)
+# # add legend
 ```
   
 

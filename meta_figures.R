@@ -118,8 +118,33 @@ ggplot(data = WM.fa.L) +
   scale_y_continuous(limits = c(-6, 3))
 dev.off()
 
+
 # ----------------------------------------------------------------------------------- #
-####      FIGURE 3 -   META REGRESSION BY GM/WM SIDE                                          #### 
+####      FIGURE 2.E  -   Severity                                                 #### 
+# ----------------------------------------------------------------------------------- #
+studies$Etiology <- droplevels(studies$Etiology)
+etiology <- data.frame(table(studies$Etiology, studies$Severeity))
+colnames(etiology) <- c("Etiology", "Severity", "Number") 
+# Stacked barplot with multiple groups
+ggplot(data=etiology, aes(x=Severity, y=Number, fill=Etiology)) +
+  geom_bar(stat="identity") + coord_flip() +
+  labs(title="Figure 2.E - Severity", y ="Number of studies", x = "")
+
+# ----------------------------------------------------------------------------------- #
+####      FIGURE 2.F  -   Effect size direction                                    #### 
+# ----------------------------------------------------------------------------------- #
+meta$effect <- droplevels(meta$effect)
+meta$Etiology <- droplevels(meta$Etiology)
+effect <- data.frame(prop.table(table(meta$Etiology, meta$effect)[,-1], 1))
+colnames(effect) <- c("Etiology", "effect", "Proportion") 
+# Stacked barplot with multiple groups
+ggplot(data=effect, aes(x=effect, y=Proportion, fill=Etiology)) +
+  geom_bar(stat="identity", position=position_dodge()) + coord_flip() +
+  ylim(0, 0.7) +
+  labs(title="Figure 2.F - Effect size direction", y ="Relative percentage", x = "")
+
+# ----------------------------------------------------------------------------------- #
+####      FIGURE 3 -   META REGRESSION BY GM/WM SIDE                               #### 
 # ----------------------------------------------------------------------------------- #
 # GRAY MATTER ALL
 # Insersect data by GM+WM and volume+FA
