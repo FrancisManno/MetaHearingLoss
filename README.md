@@ -1,5 +1,7 @@
 # Hearing loss impacts gray and white matter across the lifespan: systematic review, meta-analysis and meta-regression.   
   
+DOI: https://doi.org/10.1016/j.neuroimage.2021.117826
+  
 Francis A. M. Manno<sup>1</sup>†, Raul Rodríguez-Cruces<sup>2*</sup>, Rachit Kumar BS<sup>3,4*</sup>, J. Tilak Ratnanather DPhil<sup>5</sup>, Condon Lau PhD<sup>1</sup>†  
   
 **1.** Department of Physics, City University of Hong Kong, Kowloon, Hong Kong SAR, China  
